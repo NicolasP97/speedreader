@@ -1,14 +1,25 @@
-// app/_layout.tsx
-import { Slot } from "expo-router";
-import { View } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { colors } from "../constants/colors";
+// app/(tabs)/_layout.tsx
+import { Tabs } from "expo-router";
+import { colors } from "../../constants/colors";
 
-export default function RootLayout() {
+export default function TabsLayout() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar style="light" backgroundColor={colors.background} />
-      <Slot />
-    </View>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          borderTopColor: "#222",
+        },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: "#888",
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
+      <Tabs.Screen name="reader" options={{ title: "Reader" }} />
+      <Tabs.Screen name="import" options={{ title: "Import" }} />
+      <Tabs.Screen name="settings" options={{ title: "Settings" }} />
+      {/* stats optional */}
+    </Tabs>
   );
 }
