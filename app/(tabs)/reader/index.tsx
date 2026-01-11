@@ -9,7 +9,7 @@ export default function ReaderScreen() {
 
   return (
     <View style={styles.container}>
-      <WordRenderer word={currentWord} />
+      <WordRenderer word={currentWord} fontSize={36} />
     </View>
   );
 }

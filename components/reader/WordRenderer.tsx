@@ -17,15 +17,25 @@ export function WordRenderer({ word, fontSize = 48 }: WordRendererProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.wordRow}>
-        <AppText style={[styles.text, { fontSize }]}>{left}</AppText>
+      <View style={styles.row}>
+        <View style={styles.sideLeft}>
+          <AppText style={[styles.text, { fontSize, textAlign: "right" }]}>
+            {left}
+          </AppText>
+        </View>
+
         <AppText
           variant="accent"
           style={[styles.text, styles.orp, { fontSize }]}
         >
           {orpChar}
         </AppText>
-        <AppText style={[styles.text, { fontSize }]}>{right}</AppText>
+
+        <View style={styles.sideRight}>
+          <AppText style={[styles.text, { fontSize, textAlign: "left" }]}>
+            {right}
+          </AppText>
+        </View>
       </View>
     </View>
   );
@@ -33,17 +43,25 @@ export function WordRenderer({ word, fontSize = 48 }: WordRendererProps) {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  row: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  wordRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  sideLeft: {
+    width: 100, // später dynamisch / responsive
+  },
+  sideRight: {
+    width: 250, // später dynamisch / responsive
   },
   text: {
     fontWeight: "600",
   },
   orp: {
     color: colors.primary,
+    marginHorizontal: 2,
   },
 });
