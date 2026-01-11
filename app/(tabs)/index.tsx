@@ -10,7 +10,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <AppText>Index Screen.</AppText>
+      <AppText>Index Screen wo sind Tabs.</AppText>
     </View>
   );
 }

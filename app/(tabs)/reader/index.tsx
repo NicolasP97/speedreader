@@ -1,14 +1,15 @@
 import { View, StyleSheet } from "react-native";
 import { AppText } from "../../../components/ui/AppText";
+import { WordRenderer } from "@/components/reader/WordRenderer";
 import { colors } from "../../../constants/colors";
 
 export default function ReaderScreen() {
   // Platzhalter – später aus ReaderEngine
-  const currentWord = "Reading";
+  const currentWord = "recognition";
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.word}>{currentWord}</AppText>
+      <WordRenderer word={currentWord} />
     </View>
   );
 }
