@@ -2,13 +2,14 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { AppText } from "../../../components/ui/AppText";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
+import { tokenizeText } from "@/features/text/tokenize";
 import { colors } from "../../../constants/colors";
 
 const DUMMY_TEXT =
-  "Rapid Serial Visual Presentation (RSVP) ist eine Technik der visuellen Informationsdarstellung, bei der Inhalte – meist Wörter oder Bilder – sehr schnell nacheinander an derselben Position auf dem Bildschirm angezeigt werden. Dadurch entfallen Augenbewegungen wie das Springen zwischen Wörtern oder Zeilen, was eine besonders effiziente Wahrnehmung ermöglicht. RSVP wird vor allem in der Leseforschung, der kognitiven Psychologie und in digitalen Anwendungen wie Schnelllese-Apps eingesetzt, um Leseprozesse zu analysieren, Lesegeschwindigkeit zu erhöhen oder Informationen unter zeitkritischen Bedingungen darzustellen.";
+  "Rapid \u200D Serial \u00A0 Visual Presentation (RSVP) ist eine state-of-the-art Technik der visuellen Informationsdarstellung, bei der Inhalte – meist Wörter oder Bilder – sehr schnell nacheinander an derselben Position auf dem Bildschirm angezeigt werden. Dadurch entfallen Augenbewegungen wie das Springen zwischen Wörtern oder Zeilen, was eine besonders effiziente Wahrnehmung ermöglicht. RSVP wird vor allem in der Leseforschung, der kognitiven Psychologie und in digitalen Anwendungen wie Schnelllese-Apps eingesetzt, um Leseprozesse zu analysieren, Lesegeschwindigkeit zu erhöhen oder Informationen unter zeitkritischen Bedingungen darzustellen.";
 
 export default function ReaderScreen() {
-  const words = DUMMY_TEXT.split(" ");
+  const words = tokenizeText(DUMMY_TEXT);
 
   const { currentWord, isPlaying, wpm, setWpm, play, pause, reset } = useReader(
     {
