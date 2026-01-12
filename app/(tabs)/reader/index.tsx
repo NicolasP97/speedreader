@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
 import { AppText } from "../../../components/ui/AppText";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
@@ -18,35 +18,71 @@ export default function ReaderScreen() {
     }
   );
 
+  const { width, height } = useWindowDimensions();
+  const isPortrait = height >= width;
+
+  const ORP_X = width * 0.35; // bewusst links vom Zentrum
+  const FRAME_WIDTH = width * 0.9;
+  const FRAME_HEIGHT = 80;
+
   return (
     <View style={styles.container}>
       {/* Word display */}
-      <View style={styles.wordContainer}>
-        {currentWord ? (
-          <WordRenderer word={currentWord} />
-        ) : (
-          <AppText variant="secondary">Press Play to start</AppText>
-        )}
-        <View style={styles.wpmControls}>
-          <Pressable
-            style={styles.wpmChanger}
-            onPress={() => (wpm > 50 ? setWpm(wpm - 50) : "")}
-          >
-            <AppText variant="secondary">−</AppText>
-          </Pressable>
+      <View
+        style={[
+          styles.fixationFrame,
+          { width: FRAME_WIDTH, height: FRAME_HEIGHT },
+        ]}
+      >
+        {/* ORP Marker oben */}
+        <View style={[styles.orpMarker, { left: ORP_X, top: 0 }]} />
 
-          <AppText>{wpm} WPM</AppText>
-
-          <Pressable style={styles.wpmChanger} onPress={() => setWpm(wpm + 50)}>
-            <AppText variant="secondary">+</AppText>
-          </Pressable>
+        {/* Word Renderer */}
+        <View
+          style={{
+            position: "relative",
+            width: "100%",
+            height: FRAME_HEIGHT,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {currentWord ? (
+            <WordRenderer word={currentWord} orpX={ORP_X} />
+          ) : (
+            <AppText variant="secondary">Press Play to start</AppText>
+          )}
         </View>
+        {/* ORP Marker unten */}
+        <View style={[styles.orpMarker, { left: ORP_X, bottom: 0 }]} />
+      </View>
+
+      <View style={styles.wpmControls}>
+        <Pressable
+          style={styles.wpmChanger}
+          onPress={() => (wpm > 50 ? setWpm(wpm - 50) : "")}
+        >
+          <AppText variant="secondary">−</AppText>
+        </Pressable>
+
+        <AppText>{wpm} WPM</AppText>
+
+        <Pressable style={styles.wpmChanger} onPress={() => setWpm(wpm + 50)}>
+          <AppText variant="secondary">+</AppText>
+        </Pressable>
       </View>
 
       {/* Controls */}
-      <View style={styles.controls}>
+      <View
+        style={[
+          { flexDirection: isPortrait ? "row" : "column" },
+          styles.controls,
+        ]}
+      >
         <Pressable style={styles.button} onPress={isPlaying ? pause : play}>
-          <AppText>{isPlaying ? "Pause" : "Play"}</AppText>
+          <AppText style={{ color: isPortrait ? "green" : "red" }}>
+            {isPlaying ? "Pause" : "Play"}
+          </AppText>
         </Pressable>
 
         <Pressable style={styles.button} onPress={reset}>
@@ -63,10 +99,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     justifyContent: "center",
   },
-  wordContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  fixationFrame: {
+    position: "relative",
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "grey",
+  },
+
+  orpMarker: {
+    position: "absolute",
+    width: 2,
+    height: 12,
+    backgroundColor: colors.textSecondary,
   },
   controls: {
     paddingBottom: 40,
