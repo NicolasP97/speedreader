@@ -1,7 +1,9 @@
+import { PreparedWord } from "./prepareWords";
+
 export type ReaderState = "idle" | "playing" | "paused";
 
 export interface ReaderEngineOptions {
-  words: string[];
+  words: PreparedWord[];
   wpm: number;
-  onWordChange: (word: string, index: number) => void;
+  onWordChange: (word: PreparedWord, index: number) => void;
 }

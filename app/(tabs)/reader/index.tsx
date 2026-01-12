@@ -3,27 +3,37 @@ import { AppText } from "../../../components/ui/AppText";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
 import { tokenizeText } from "@/features/text/tokenize";
+import { prepareWords } from "@/features/reader/prepareWords";
 import { colors } from "../../../constants/colors";
+import { useMemo } from "react";
 
 const DUMMY_TEXT =
   "Rapid \u200D Serial \u00A0 Visual Presentation (RSVP) ist eine state-of-the-art Technik der visuellen Informationsdarstellung, bei der Inhalte – meist Wörter oder Bilder – sehr schnell nacheinander an derselben Position auf dem Bildschirm angezeigt werden. Dadurch entfallen Augenbewegungen wie das Springen zwischen Wörtern oder Zeilen, was eine besonders effiziente Wahrnehmung ermöglicht. RSVP wird vor allem in der Leseforschung, der kognitiven Psychologie und in digitalen Anwendungen wie Schnelllese-Apps eingesetzt, um Leseprozesse zu analysieren, Lesegeschwindigkeit zu erhöhen oder Informationen unter zeitkritischen Bedingungen darzustellen.";
 
 export default function ReaderScreen() {
-  const words = tokenizeText(DUMMY_TEXT);
-
-  const { currentWord, isPlaying, wpm, setWpm, play, pause, reset } = useReader(
-    {
-      words,
-      wpm: 300,
-    }
-  );
-
   const { width, height } = useWindowDimensions();
   const isPortrait = height >= width;
 
   const ORP_X = width * 0.35; // bewusst links vom Zentrum
   const FRAME_WIDTH = width * 0.9;
   const FRAME_HEIGHT = 80;
+
+  const rawWords = tokenizeText(DUMMY_TEXT);
+
+  const preparedWords = useMemo(() => {
+    if (!rawWords || rawWords.length === 0) return [];
+    return prepareWords(rawWords, {
+      fontSize: 32,
+      fontWeight: "600",
+      orpX: ORP_X,
+    });
+  }, [rawWords, ORP_X]);
+
+  const { currentPreparedWord, isPlaying, wpm, setWpm, play, pause, reset } =
+    useReader({
+      words: preparedWords,
+      wpm: 300,
+    });
 
   return (
     <View style={styles.container}>
@@ -47,8 +57,8 @@ export default function ReaderScreen() {
             justifyContent: "center",
           }}
         >
-          {currentWord ? (
-            <WordRenderer word={currentWord} orpX={ORP_X} />
+          {currentPreparedWord ? (
+            <WordRenderer preparedWord={currentPreparedWord} />
           ) : (
             <AppText variant="secondary">Press Play to start</AppText>
           )}

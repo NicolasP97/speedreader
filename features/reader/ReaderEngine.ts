@@ -1,8 +1,9 @@
 import { getWordDurationMs } from "../../utils/timing";
 import { ReaderEngineOptions, ReaderState } from "./types";
+import { PreparedWord } from "./prepareWords";
 
 export class ReaderEngine {
-  private words: string[];
+  private words: PreparedWord[];
   private wpm: number;
 
   private onWordChange: ReaderEngineOptions["onWordChange"];
@@ -12,6 +13,10 @@ export class ReaderEngine {
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   constructor(options: ReaderEngineOptions) {
+    if (!options.words) {
+      throw new Error("ReaderEngine: words must be defined");
+    }
+
     this.words = options.words;
     this.wpm = options.wpm;
     this.onWordChange = options.onWordChange;
@@ -68,10 +73,20 @@ export class ReaderEngine {
       return;
     }
 
-    const word = this.words[this.index];
-    this.onWordChange(word, this.index);
+    const preparedWord = this.words[this.index];
+    if (!preparedWord) {
+      this.reset();
+      return;
+    }
+    this.onWordChange(preparedWord, this.index);
 
-    const duration = getWordDurationMs(word, this.wpm);
+    const duration = getWordDurationMs(preparedWord.word, this.wpm);
+
+    console.log(
+      "Reader Engine PREPARE WORD:",
+      preparedWord,
+      typeof preparedWord
+    );
 
     this.timeoutId = setTimeout(() => {
       this.index += 1;
