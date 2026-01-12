@@ -11,7 +11,9 @@ interface UseReaderResult {
   currentWord: string | null;
   index: number;
   isPlaying: boolean;
+  wpm: number;
 
+  setWpm: React.Dispatch<React.SetStateAction<number>>;
   play: () => void;
   pause: () => void;
   reset: () => void;
@@ -19,18 +21,20 @@ interface UseReaderResult {
 }
 
 export function useReader(options: UseReaderOptions): UseReaderResult {
-  const { words, wpm } = options;
+  const { words } = options;
 
   const engineRef = useRef<ReaderEngine | null>(null);
 
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [wpm, setWpm] = useState(options.wpm);
 
+  // 🔹 Engine einmal (oder bei neuem Text) erstellen
   useEffect(() => {
     engineRef.current = new ReaderEngine({
       words,
-      wpm,
+      wpm: 0, // Initialwert egal – wird sofort überschrieben
       onWordChange: (word, index) => {
         setCurrentWord(word);
         setIndex(index);
@@ -41,7 +45,12 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
       engineRef.current?.reset();
       engineRef.current = null;
     };
-  }, [words, wpm]);
+  }, [words]);
+
+  // 🔹 WPM-Änderungen an Engine weiterreichen
+  useEffect(() => {
+    engineRef.current?.setWpm(wpm);
+  }, [wpm]);
 
   const play = () => {
     engineRef.current?.play();
@@ -68,6 +77,8 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
     currentWord,
     index,
     isPlaying,
+    wpm,
+    setWpm,
     play,
     pause,
     reset,

@@ -5,15 +5,17 @@ import { useReader } from "../../../features/reader/useReader";
 import { colors } from "../../../constants/colors";
 
 const DUMMY_TEXT =
-  "Speed reading is a technique that allows faster reading by reducing subvocalization and improving visual focus.";
+  "Rapid Serial Visual Presentation (RSVP) ist eine Technik der visuellen Informationsdarstellung, bei der Inhalte – meist Wörter oder Bilder – sehr schnell nacheinander an derselben Position auf dem Bildschirm angezeigt werden. Dadurch entfallen Augenbewegungen wie das Springen zwischen Wörtern oder Zeilen, was eine besonders effiziente Wahrnehmung ermöglicht. RSVP wird vor allem in der Leseforschung, der kognitiven Psychologie und in digitalen Anwendungen wie Schnelllese-Apps eingesetzt, um Leseprozesse zu analysieren, Lesegeschwindigkeit zu erhöhen oder Informationen unter zeitkritischen Bedingungen darzustellen.";
 
 export default function ReaderScreen() {
   const words = DUMMY_TEXT.split(" ");
 
-  const { currentWord, isPlaying, play, pause, reset } = useReader({
-    words,
-    wpm: 300,
-  });
+  const { currentWord, isPlaying, wpm, setWpm, play, pause, reset } = useReader(
+    {
+      words,
+      wpm: 300,
+    }
+  );
 
   return (
     <View style={styles.container}>
@@ -24,6 +26,20 @@ export default function ReaderScreen() {
         ) : (
           <AppText variant="secondary">Press Play to start</AppText>
         )}
+        <View style={styles.wpmControls}>
+          <Pressable
+            style={styles.wpmChanger}
+            onPress={() => (wpm > 50 ? setWpm(wpm - 50) : "")}
+          >
+            <AppText variant="secondary">−</AppText>
+          </Pressable>
+
+          <AppText>{wpm} WPM</AppText>
+
+          <Pressable style={styles.wpmChanger} onPress={() => setWpm(wpm + 50)}>
+            <AppText variant="secondary">+</AppText>
+          </Pressable>
+        </View>
       </View>
 
       {/* Controls */}
@@ -62,6 +78,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 6,
     borderWidth: 1,
+    borderColor: colors.border,
+  },
+  wpmControls: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+    marginBottom: 16,
+  },
+  wpmChanger: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 8,
+    paddingBottom: 8,
+    borderWidth: 2,
+    borderRadius: 10,
     borderColor: colors.border,
   },
 });

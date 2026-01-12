@@ -4,6 +4,7 @@ import { ReaderEngineOptions, ReaderState } from "./types";
 export class ReaderEngine {
   private words: string[];
   private wpm: number;
+
   private onWordChange: ReaderEngineOptions["onWordChange"];
 
   private index = 0;
@@ -16,8 +17,19 @@ export class ReaderEngine {
     this.onWordChange = options.onWordChange;
   }
 
+  /** 🔹 Laufzeitänderung der Lesegeschwindigkeit */
+  setWpm(wpm: number) {
+    if (wpm <= 0) return;
+    this.wpm = wpm;
+  }
+
   play() {
     if (this.state === "playing") return;
+
+    // Schutz: nicht starten ohne gültige WPM
+    if (this.wpm <= 0) {
+      throw new Error("ReaderEngine: WPM must be set before play()");
+    }
 
     this.state = "playing";
     this.tick();
