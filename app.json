@@ -3,7 +3,7 @@
     "name": "speedreader",
     "slug": "speedreader",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "speedreader",
     "userInterfaceStyle": "automatic",

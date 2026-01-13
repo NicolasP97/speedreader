@@ -7,8 +7,7 @@ import { prepareWords } from "@/features/reader/prepareWords";
 import { colors } from "../../../constants/colors";
 import { useMemo } from "react";
 
-const DUMMY_TEXT =
-  "Das e.g. vgl. mal 20 ° C ^ ^ Wort & Apfel = wird + auf - / die 5€ 10$ 50% Hallo indogermanische Grundform *h₂ébōl zurückgeführt, die nur Fortsetzungen im Nordwestindogermanischen (Germanisch, Keltisch, Baltisch und Slawisch) hat und dort in allen Formen den Apfel bezeichnet. In der Forschung herrscht Uneinigkeit darüber, wie die Form genau anzusetzen ist und ob es sich um das indogermanische Apfelwort handelt oder eine Entlehnung aus einer nicht-indogermanischen Sprache (vgl. kasachisch alma, burushaski báalt[1]).[2][3] Aus der idg. Genitivform *h₂eb-l-ós[4] entwickelt sich das urgermanische Apfelwort *aplaz, aus dem (mit westgermanischer Gemination vor -l-) althochdeutsch apful, afful > Apfel (Mehrzahl epfili > Äpfel), englisch apple und niederländisch appel hervorgehen.[5] Der wissenschaftliche Gattungsname Malus ist abgeleitet von dem lateinischen Wort malum, was auf Deutsch so viel wie Apfel oder apfelförmige Baumfrucht bedeutet.";
+const DUMMY_TEXT = "Das Wort Apfel wird auf die indogermanische";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
@@ -29,11 +28,20 @@ export default function ReaderScreen() {
     });
   }, [rawWords, ORP_X]);
 
-  const { currentPreparedWord, isPlaying, wpm, setWpm, play, pause, reset } =
-    useReader({
-      words: preparedWords,
-      wpm: 300,
-    });
+  const {
+    currentPreparedWord,
+    isPlaying,
+    wpm,
+    setWpm,
+    play,
+    pause,
+    reset,
+    skipForward,
+    skipBackward,
+  } = useReader({
+    words: preparedWords,
+    wpm: 300,
+  });
 
   return (
     <View style={styles.container}>
@@ -115,10 +123,16 @@ export default function ReaderScreen() {
           styles.controls,
         ]}
       >
+        <Pressable style={styles.button} onPress={skipBackward}>
+          <AppText variant="secondary">Skip -</AppText>
+        </Pressable>
         <Pressable style={styles.button} onPress={isPlaying ? pause : play}>
           <AppText style={{ color: isPortrait ? "green" : "red" }}>
             {isPlaying ? "Pause" : "Play"}
           </AppText>
+        </Pressable>
+        <Pressable style={styles.button} onPress={skipForward}>
+          <AppText variant="secondary">Skip +</AppText>
         </Pressable>
 
         <Pressable style={styles.button} onPress={reset}>
@@ -152,7 +166,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     flexDirection: "row",
     justifyContent: "center",
-    gap: 24,
+    gap: 12,
   },
   button: {
     paddingVertical: 12,

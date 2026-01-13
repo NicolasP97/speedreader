@@ -18,7 +18,8 @@ interface UseReaderResult {
   play: () => void;
   pause: () => void;
   reset: () => void;
-  jumpTo: (index: number) => void;
+  skipForward: () => void;
+  skipBackward: () => void;
 }
 
 export function useReader(options: UseReaderOptions): UseReaderResult {
@@ -28,7 +29,7 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const [currentPreparedWord, setCurrentPreparedWord] =
     useState<PreparedWord | null>(null);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [wpm, setWpm] = useState(options.wpm);
 
@@ -70,11 +71,17 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
     engineRef.current?.reset();
     setIsPlaying(false);
     setCurrentPreparedWord(null);
-    setIndex(0);
+    setIndex(-1);
   };
 
-  const jumpTo = (index: number) => {
-    engineRef.current?.jumpTo(index);
+  const skipForward = () => {
+    engineRef.current?.skipForward(1);
+    setIsPlaying(false);
+  };
+
+  const skipBackward = () => {
+    engineRef.current?.skipBackward(1);
+    setIsPlaying(false);
   };
 
   return {
@@ -86,6 +93,7 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
     play,
     pause,
     reset,
-    jumpTo,
+    skipForward,
+    skipBackward,
   };
 }
