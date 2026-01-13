@@ -6,7 +6,15 @@ export class ReaderEngine {
   private words: PreparedWord[];
   private wpm: number;
 
+  /** Zentraler State-Setter */
+  private setState(state: ReaderState) {
+    if (this.state === state) return;
+    this.state = state;
+    this.onStateChange?.(state);
+  }
+
   private onWordChange: ReaderEngineOptions["onWordChange"];
+  private onStateChange?: ReaderEngineOptions["onStateChange"];
 
   private index = -1;
   private state: ReaderState = "idle";
@@ -20,6 +28,8 @@ export class ReaderEngine {
     this.words = options.words;
     this.wpm = options.wpm;
     this.onWordChange = options.onWordChange;
+    // 🔹 NEU
+    this.onStateChange = options.onStateChange;
   }
 
   /** 🔹 Laufzeitänderung der Lesegeschwindigkeit */
@@ -33,14 +43,21 @@ export class ReaderEngine {
     if (this.state === "playing") return;
     if (this.words.length === 0) return;
 
+    //  Am Ende des Textes: nichts tun
+    if (this.index === this.words.length - 1) {
+      this.setState("paused");
+      return;
+    }
+
     if (this.wpm <= 0) {
       throw new Error("ReaderEngine: WPM must be set before play()");
     }
 
-    this.state = "playing";
     if (this.index === -1) {
       this.index = 0;
     }
+
+    this.setState("playing");
     this.tick();
   }
 
@@ -51,16 +68,14 @@ export class ReaderEngine {
       this.timeoutId = null;
     }
 
-    if (this.state === "playing") {
-      this.state = "paused";
-    }
+    this.setState("paused");
   }
 
   reset() {
     console.log("Reset index: ", this.index);
     this.pause();
     this.index = -1;
-    this.state = "idle";
+    this.setState("idle");
   }
 
   skipForward(count: number = 1) {
@@ -100,7 +115,6 @@ export class ReaderEngine {
   private tick() {
     if (this.state !== "playing") return;
 
-    // Ende erreicht → stoppen, NICHT resetten
     if (this.index < 0 || this.index >= this.words.length) {
       this.pause();
       return;
@@ -117,15 +131,12 @@ export class ReaderEngine {
     const duration = getWordDurationMs(preparedWord.word, this.wpm);
 
     this.timeoutId = setTimeout(() => {
-      this.index += 1;
-
-      // Wenn wir JETZT über das Ende hinaus wären → stoppen
-      if (this.index >= this.words.length) {
-        this.index = this.words.length - 1;
+      if (this.index >= this.words.length - 1) {
         this.pause();
         return;
       }
 
+      this.index += 1;
       this.tick();
     }, duration);
   }

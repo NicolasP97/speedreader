@@ -1,5 +1,6 @@
 // features/reader/useReader.ts
 import { useEffect, useRef, useState } from "react";
+import * as Haptics from "expo-haptics";
 import { ReaderEngine } from "./ReaderEngine";
 import { PreparedWord } from "./prepareWords";
 
@@ -39,10 +40,18 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
     engineRef.current = new ReaderEngine({
       words,
-      wpm: 0, // Initialwert egal – wird sofort überschrieben
+      wpm: 0,
       onWordChange: (preparedWord, index) => {
         setCurrentPreparedWord(preparedWord);
         setIndex(index);
+
+        // 🔹 HAPTIK: immer wenn letztes Wort angezeigt wird
+        if (index === words.length - 1) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        }
+      },
+      onStateChange: (state) => {
+        setIsPlaying(state === "playing");
       },
     });
 
@@ -59,6 +68,9 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const play = () => {
     engineRef.current?.play();
+    if (index === words.length - 1) {
+      return;
+    }
     setIsPlaying(true);
   };
 
@@ -69,7 +81,6 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const reset = () => {
     engineRef.current?.reset();
-    setIsPlaying(false);
     setCurrentPreparedWord(null);
     setIndex(-1);
   };
