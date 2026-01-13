@@ -8,7 +8,7 @@ import { colors } from "../../../constants/colors";
 import { useMemo } from "react";
 
 const DUMMY_TEXT =
-  "Das Wort Apfel wird auf die indogermanische Grundform *h₂ébōl zurückgeführt, die nur Fortsetzungen im Nordwestindogermanischen (Germanisch, Keltisch, Baltisch und Slawisch) hat und dort in allen Formen den Apfel bezeichnet. In der Forschung herrscht Uneinigkeit darüber, wie die Form genau anzusetzen ist und ob es sich um das indogermanische Apfelwort handelt oder eine Entlehnung aus einer nicht-indogermanischen Sprache (vgl. kasachisch alma, burushaski báalt[1]).[2][3] Aus der idg. Genitivform *h₂eb-l-ós[4] entwickelt sich das urgermanische Apfelwort *aplaz, aus dem (mit westgermanischer Gemination vor -l-) althochdeutsch apful, afful > Apfel (Mehrzahl epfili > Äpfel), englisch apple und niederländisch appel hervorgehen.[5] Der wissenschaftliche Gattungsname Malus ist abgeleitet von dem lateinischen Wort malum, was auf Deutsch so viel wie Apfel oder apfelförmige Baumfrucht bedeutet.";
+  "Das e.g. vgl. mal 20 ° C ^ ^ Wort & Apfel = wird + auf - / die 5€ 10$ 50% Hallo indogermanische Grundform *h₂ébōl zurückgeführt, die nur Fortsetzungen im Nordwestindogermanischen (Germanisch, Keltisch, Baltisch und Slawisch) hat und dort in allen Formen den Apfel bezeichnet. In der Forschung herrscht Uneinigkeit darüber, wie die Form genau anzusetzen ist und ob es sich um das indogermanische Apfelwort handelt oder eine Entlehnung aus einer nicht-indogermanischen Sprache (vgl. kasachisch alma, burushaski báalt[1]).[2][3] Aus der idg. Genitivform *h₂eb-l-ós[4] entwickelt sich das urgermanische Apfelwort *aplaz, aus dem (mit westgermanischer Gemination vor -l-) althochdeutsch apful, afful > Apfel (Mehrzahl epfili > Äpfel), englisch apple und niederländisch appel hervorgehen.[5] Der wissenschaftliche Gattungsname Malus ist abgeleitet von dem lateinischen Wort malum, was auf Deutsch so viel wie Apfel oder apfelförmige Baumfrucht bedeutet.";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
@@ -63,12 +63,30 @@ export default function ReaderScreen() {
               fontFamily="Inconsolata"
             />
           ) : (
-            <AppText
-              variant="secondary"
-              style={{ fontSize: 36, fontFamily: "Inconsolata" }}
-            >
-              Press Play to start
-            </AppText>
+            <View style={{ flexDirection: "row" }}>
+              <AppText
+                variant="secondary"
+                style={{ fontSize: 36, fontFamily: "Inconsolata" }}
+              >
+                Press P
+              </AppText>
+              <AppText
+                variant="secondary"
+                style={{
+                  fontSize: 36,
+                  fontFamily: "Inconsolata",
+                  color: colors.primary,
+                }}
+              >
+                l
+              </AppText>
+              <AppText
+                variant="secondary"
+                style={{ fontSize: 36, fontFamily: "Inconsolata" }}
+              >
+                ay to start
+              </AppText>
+            </View>
           )}
         </View>
         {/* ORP Marker unten */}

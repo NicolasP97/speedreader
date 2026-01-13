@@ -73,18 +73,10 @@ function measureText(
   if (!text) return 0;
 
   /**
-   * TEMPORÄRE NÄHERUNG:
-   * durchschnittliche Glyphenbreite ≈ 0.55 * fontSize
-   *
-   * Das ist:
-   * - nicht perfekt
-   * - aber deterministisch
-   * - und gut genug, um Option B sauber aufzubauen
+   *Dank Monospace fonts einfach fontSize * 0.5
    */
   const AVERAGE_GLYPH_WIDTH = fontSize * 0.5;
 
-  console.log("prepareWords text.length: ", text.length);
-  console.log("prepareWords AVERAGE_GLYPH_WIDTH: ", AVERAGE_GLYPH_WIDTH);
-
+  // text.length ist einfach Anzahl der Monospace Buchstaben
   return text.length * AVERAGE_GLYPH_WIDTH;
 }
