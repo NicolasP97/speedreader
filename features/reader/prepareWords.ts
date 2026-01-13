@@ -81,7 +81,7 @@ function measureText(
    * - aber deterministisch
    * - und gut genug, um Option B sauber aufzubauen
    */
-  const AVERAGE_GLYPH_WIDTH = fontSize * 0.55;
+  const AVERAGE_GLYPH_WIDTH = fontSize * 0.5;
 
   console.log("prepareWords text.length: ", text.length);
   console.log("prepareWords AVERAGE_GLYPH_WIDTH: ", AVERAGE_GLYPH_WIDTH);

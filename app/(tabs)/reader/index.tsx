@@ -8,7 +8,7 @@ import { colors } from "../../../constants/colors";
 import { useMemo } from "react";
 
 const DUMMY_TEXT =
-  "Rapid \u200D Serial \u00A0 Visual Presentation (RSVP) ist eine state-of-the-art Technik der visuellen Informationsdarstellung, bei der Inhalte – meist Wörter oder Bilder – sehr schnell nacheinander an derselben Position auf dem Bildschirm angezeigt werden. Dadurch entfallen Augenbewegungen wie das Springen zwischen Wörtern oder Zeilen, was eine besonders effiziente Wahrnehmung ermöglicht. RSVP wird vor allem in der Leseforschung, der kognitiven Psychologie und in digitalen Anwendungen wie Schnelllese-Apps eingesetzt, um Leseprozesse zu analysieren, Lesegeschwindigkeit zu erhöhen oder Informationen unter zeitkritischen Bedingungen darzustellen.";
+  "Das Wort Apfel wird auf die indogermanische Grundform *h₂ébōl zurückgeführt, die nur Fortsetzungen im Nordwestindogermanischen (Germanisch, Keltisch, Baltisch und Slawisch) hat und dort in allen Formen den Apfel bezeichnet. In der Forschung herrscht Uneinigkeit darüber, wie die Form genau anzusetzen ist und ob es sich um das indogermanische Apfelwort handelt oder eine Entlehnung aus einer nicht-indogermanischen Sprache (vgl. kasachisch alma, burushaski báalt[1]).[2][3] Aus der idg. Genitivform *h₂eb-l-ós[4] entwickelt sich das urgermanische Apfelwort *aplaz, aus dem (mit westgermanischer Gemination vor -l-) althochdeutsch apful, afful > Apfel (Mehrzahl epfili > Äpfel), englisch apple und niederländisch appel hervorgehen.[5] Der wissenschaftliche Gattungsname Malus ist abgeleitet von dem lateinischen Wort malum, was auf Deutsch so viel wie Apfel oder apfelförmige Baumfrucht bedeutet.";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
@@ -58,9 +58,17 @@ export default function ReaderScreen() {
           }}
         >
           {currentPreparedWord ? (
-            <WordRenderer preparedWord={currentPreparedWord} />
+            <WordRenderer
+              preparedWord={currentPreparedWord}
+              fontFamily="Inconsolata"
+            />
           ) : (
-            <AppText variant="secondary">Press Play to start</AppText>
+            <AppText
+              variant="secondary"
+              style={{ fontSize: 36, fontFamily: "Inconsolata" }}
+            >
+              Press Play to start
+            </AppText>
           )}
         </View>
         {/* ORP Marker unten */}
