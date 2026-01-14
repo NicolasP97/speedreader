@@ -13,9 +13,7 @@ interface UseReaderResult {
   currentPreparedWord: PreparedWord | null;
   index: number;
   isPlaying: boolean;
-  wpm: number;
 
-  setWpm: React.Dispatch<React.SetStateAction<number>>;
   play: () => void;
   pause: () => void;
   reset: () => void;
@@ -32,51 +30,54 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
     useState<PreparedWord | null>(null);
   const [index, setIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [wpm, setWpm] = useState(options.wpm);
 
   // 🔹 Engine einmal (oder bei neuem Text) erstellen
   useEffect(() => {
     if (!words || words.length === 0) return;
 
-    engineRef.current = new ReaderEngine({
-      words,
-      wpm: 0,
-      onWordChange: (preparedWord, index) => {
-        setCurrentPreparedWord(preparedWord);
-        setIndex(index);
+    if (!engineRef.current && words.length > 0) {
+      engineRef.current = new ReaderEngine({
+        words,
+        wpm: options.wpm,
+        onWordChange: (preparedWord, index) => {
+          setCurrentPreparedWord(preparedWord);
+          setIndex(index);
 
-        // 🔹 HAPTIK: immer wenn letztes Wort angezeigt wird
-        if (index === words.length - 1) {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        }
-      },
-      onStateChange: (state) => {
-        setIsPlaying(state === "playing");
-      },
-    });
+          // Immer Haptik beim Erreichen des Textendes
+          if (index === words.length - 1) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          }
+        },
+        onStateChange: (state) => {
+          setIsPlaying(state === "playing");
+        },
+      });
+    }
+  }, []);
 
+  useEffect(() => {
+    if (!engineRef.current) return;
+    engineRef.current.setWords(words);
+  }, [words]);
+
+  useEffect(() => {
     return () => {
       engineRef.current?.reset();
       engineRef.current = null;
     };
-  }, [words]);
+  }, []);
 
   // 🔹 WPM-Änderungen an Engine weiterreichen
   useEffect(() => {
-    engineRef.current?.setWpm(wpm);
-  }, [wpm]);
+    engineRef.current?.setWpm(options.wpm);
+  }, [options.wpm]);
 
   const play = () => {
     engineRef.current?.play();
-    if (index === words.length - 1) {
-      return;
-    }
-    setIsPlaying(true);
   };
 
   const pause = () => {
     engineRef.current?.pause();
-    setIsPlaying(false);
   };
 
   const reset = () => {
@@ -87,20 +88,20 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const skipForward = () => {
     engineRef.current?.skipForward(1);
-    setIsPlaying(false);
+    // setIsPlaying(false);
   };
 
   const skipBackward = () => {
     engineRef.current?.skipBackward(1);
-    setIsPlaying(false);
+    // setIsPlaying(false);
   };
+
+  console.log("useReader wpm: ", options.wpm);
 
   return {
     currentPreparedWord,
     index,
     isPlaying,
-    wpm,
-    setWpm,
     play,
     pause,
     reset,

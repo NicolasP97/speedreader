@@ -13,6 +13,14 @@ export class ReaderEngine {
     this.onStateChange?.(state);
   }
 
+  setWords(words: PreparedWord[]) {
+    this.words = words;
+
+    if (this.index >= words.length) {
+      this.index = words.length - 1;
+    }
+  }
+
   private onWordChange: ReaderEngineOptions["onWordChange"];
   private onStateChange?: ReaderEngineOptions["onStateChange"];
 
@@ -36,6 +44,7 @@ export class ReaderEngine {
   setWpm(wpm: number) {
     if (wpm <= 0) return;
     this.wpm = wpm;
+    console.log("ENGINE SET WPM:", wpm);
   }
 
   play() {

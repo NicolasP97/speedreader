@@ -5,25 +5,30 @@ import { useReader } from "../../../features/reader/useReader";
 import { tokenizeText } from "@/features/text/tokenize";
 import { prepareWords } from "@/features/reader/prepareWords";
 import { TransportControls } from "@/components/reader/TransportControls";
+import { ReaderControls } from "@/components/reader/ReaderControls";
 import { colors } from "../../../constants/colors";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
-const DUMMY_TEXT = "Das Wort Apfel wird auf die indogermanische";
+const DUMMY_TEXT =
+  "Die Äpfel (Malus) bilden eine Pflanzengattung der Kernobstgewächse (Pyrinae) aus der Familie der Rosengewächse (Rosaceae). Die Gattung umfasst etwa 42 bis 55 Arten laubwerfender Bäume und Sträucher aus Wäldern und Dickichten der nördlichen gemäßigten Zone in Europa, Asien und Nordamerika, aus denen auch eine große Anzahl an oft schwer unterscheidbaren Hybriden hervorgegangen ist. Die weltweit mit Abstand bekannteste und wirtschaftlich sehr bedeutende Art ist der Kulturapfel (Malus domestica). Daneben werden manche aus Ostasien stammende Arten mit nur etwa kirschgroßen Früchten, wie etwa der Japanische Apfel (Malus floribunda), der Kirschapfel (Malus baccata) und Malus ×zumi in gemäßigten Klimagebieten als Ziersträucher und -bäume angepflanzt. Nicht zu verwechseln mit den Äpfeln sind die nicht näher verwandten Granatäpfel (Punica granatum).";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
   const isPortrait = height >= width;
 
+  const [fontSize, setFontSize] = useState(32);
+  const [wpm, setWpm] = useState(300);
+
   const ORP_X = width * 0.35; // bewusst links vom Zentrum
   const FRAME_WIDTH = width * 0.9;
-  const FRAME_HEIGHT = 80;
+  const FRAME_HEIGHT = height * 0.1;
 
   const rawWords = tokenizeText(DUMMY_TEXT);
 
   const preparedWords = useMemo(() => {
     if (!rawWords || rawWords.length === 0) return [];
     return prepareWords(rawWords, {
-      fontSize: 32,
+      fontSize: fontSize,
       fontWeight: "600",
       orpX: ORP_X,
     });
@@ -33,8 +38,6 @@ export default function ReaderScreen() {
     currentPreparedWord,
     index,
     isPlaying,
-    wpm,
-    setWpm,
     play,
     pause,
     reset,
@@ -42,12 +45,12 @@ export default function ReaderScreen() {
     skipBackward,
   } = useReader({
     words: preparedWords,
-    wpm: 300,
+    wpm,
   });
-  console.log("index index: ", index);
-  console.log("index preparedWords.length: ", preparedWords.length - 1);
 
   const canPlay = index < preparedWords.length - 1;
+
+  console.log("index wpm: ", wpm);
 
   return (
     <View style={styles.container}>
@@ -75,6 +78,7 @@ export default function ReaderScreen() {
             <WordRenderer
               preparedWord={currentPreparedWord}
               fontFamily="Inconsolata"
+              fontSize={fontSize}
             />
           ) : (
             <View style={{ flexDirection: "row" }}>
@@ -107,21 +111,6 @@ export default function ReaderScreen() {
         <View style={[styles.orpMarker, { left: ORP_X, bottom: 0 }]} />
       </View>
 
-      <View style={styles.wpmControls}>
-        <Pressable
-          style={styles.wpmChanger}
-          onPress={() => (wpm > 50 ? setWpm(wpm - 50) : "")}
-        >
-          <AppText variant="secondary">−</AppText>
-        </Pressable>
-
-        <AppText>{wpm} WPM</AppText>
-
-        <Pressable style={styles.wpmChanger} onPress={() => setWpm(wpm + 50)}>
-          <AppText variant="secondary">+</AppText>
-        </Pressable>
-      </View>
-
       {/* Controls */}
       <View
         style={[
@@ -139,6 +128,13 @@ export default function ReaderScreen() {
           onReset={reset}
         />
       </View>
+
+      <ReaderControls
+        wpm={wpm}
+        onWpmChange={setWpm}
+        fontSize={fontSize}
+        onFontSizeChange={setFontSize}
+      />
     </View>
   );
 }
