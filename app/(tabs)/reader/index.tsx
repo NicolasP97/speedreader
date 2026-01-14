@@ -50,8 +50,6 @@ export default function ReaderScreen() {
 
   const canPlay = index < preparedWords.length - 1;
 
-  console.log("index wpm: ", wpm);
-
   return (
     <View style={styles.container}>
       {/* Word display */}

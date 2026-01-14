@@ -4,6 +4,7 @@
     "slug": "speedreader",
     "version": "1.0.0",
     "orientation": "portrait",
+    "owner": "97nicolas",
     "icon": "./assets/images/icon.png",
     "scheme": "speedreader",
     "userInterfaceStyle": "automatic",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f4b35eeb-5908-498c-9705-1ad49304b9f3"
+      }
     }
   }
 }

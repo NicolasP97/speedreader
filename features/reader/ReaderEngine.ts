@@ -44,7 +44,6 @@ export class ReaderEngine {
   setWpm(wpm: number) {
     if (wpm <= 0) return;
     this.wpm = wpm;
-    console.log("ENGINE SET WPM:", wpm);
   }
 
   play() {

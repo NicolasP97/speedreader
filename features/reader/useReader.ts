@@ -88,15 +88,11 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const skipForward = () => {
     engineRef.current?.skipForward(1);
-    // setIsPlaying(false);
   };
 
   const skipBackward = () => {
     engineRef.current?.skipBackward(1);
-    // setIsPlaying(false);
   };
-
-  console.log("useReader wpm: ", options.wpm);
 
   return {
     currentPreparedWord,
