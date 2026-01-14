@@ -6,11 +6,9 @@ import { tokenizeText } from "@/features/text/tokenize";
 import { prepareWords } from "@/features/reader/prepareWords";
 import { TransportControls } from "@/components/reader/TransportControls";
 import { ReaderControls } from "@/components/reader/ReaderControls";
+import { useReaderText } from "@/features/text/readerTextContext";
 import { colors } from "../../../constants/colors";
 import { useMemo, useState } from "react";
-
-const DUMMY_TEXT =
-  "Die Äpfel (Malus) bilden eine Pflanzengattung der Kernobstgewächse (Pyrinae) aus der Familie der Rosengewächse (Rosaceae). Die Gattung umfasst etwa 42 bis 55 Arten laubwerfender Bäume und Sträucher aus Wäldern und Dickichten der nördlichen gemäßigten Zone in Europa, Asien und Nordamerika, aus denen auch eine große Anzahl an oft schwer unterscheidbaren Hybriden hervorgegangen ist. Die weltweit mit Abstand bekannteste und wirtschaftlich sehr bedeutende Art ist der Kulturapfel (Malus domestica). Daneben werden manche aus Ostasien stammende Arten mit nur etwa kirschgroßen Früchten, wie etwa der Japanische Apfel (Malus floribunda), der Kirschapfel (Malus baccata) und Malus ×zumi in gemäßigten Klimagebieten als Ziersträucher und -bäume angepflanzt. Nicht zu verwechseln mit den Äpfeln sind die nicht näher verwandten Granatäpfel (Punica granatum).";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
@@ -23,16 +21,17 @@ export default function ReaderScreen() {
   const FRAME_WIDTH = width * 0.9;
   const FRAME_HEIGHT = height * 0.1;
 
-  const rawWords = tokenizeText(DUMMY_TEXT);
+  // Text-Tokens aus readerTextContext beziehen
+  const { tokens } = useReaderText();
 
   const preparedWords = useMemo(() => {
-    if (!rawWords || rawWords.length === 0) return [];
-    return prepareWords(rawWords, {
+    if (!tokens || tokens.length === 0) return [];
+    return prepareWords(tokens, {
       fontSize: fontSize,
       fontWeight: "600",
       orpX: ORP_X,
     });
-  }, [rawWords, ORP_X]);
+  }, [tokens, fontSize, ORP_X]);
 
   const {
     currentPreparedWord,
