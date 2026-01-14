@@ -39,7 +39,6 @@ export class ReaderEngine {
   }
 
   play() {
-    console.log("play");
     if (this.state === "playing") return;
     if (this.words.length === 0) return;
 
@@ -62,7 +61,6 @@ export class ReaderEngine {
   }
 
   pause() {
-    console.log("pause");
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
       this.timeoutId = null;

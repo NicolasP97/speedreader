@@ -4,6 +4,7 @@ import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
 import { tokenizeText } from "@/features/text/tokenize";
 import { prepareWords } from "@/features/reader/prepareWords";
+import { TransportControls } from "@/components/reader/TransportControls";
 import { colors } from "../../../constants/colors";
 import { useMemo } from "react";
 
@@ -30,6 +31,7 @@ export default function ReaderScreen() {
 
   const {
     currentPreparedWord,
+    index,
     isPlaying,
     wpm,
     setWpm,
@@ -42,6 +44,10 @@ export default function ReaderScreen() {
     words: preparedWords,
     wpm: 300,
   });
+  console.log("index index: ", index);
+  console.log("index preparedWords.length: ", preparedWords.length - 1);
+
+  const canPlay = index < preparedWords.length - 1;
 
   return (
     <View style={styles.container}>
@@ -123,21 +129,15 @@ export default function ReaderScreen() {
           styles.controls,
         ]}
       >
-        <Pressable style={styles.button} onPress={skipBackward}>
-          <AppText variant="secondary">Skip -</AppText>
-        </Pressable>
-        <Pressable style={styles.button} onPress={isPlaying ? pause : play}>
-          <AppText style={{ color: isPortrait ? "green" : "red" }}>
-            {isPlaying ? "Pause" : "Play"}
-          </AppText>
-        </Pressable>
-        <Pressable style={styles.button} onPress={skipForward}>
-          <AppText variant="secondary">Skip +</AppText>
-        </Pressable>
-
-        <Pressable style={styles.button} onPress={reset}>
-          <AppText variant="secondary">Reset</AppText>
-        </Pressable>
+        <TransportControls
+          isPlaying={isPlaying}
+          canPlay={canPlay}
+          onPlay={play}
+          onPause={pause}
+          onSkipForward={skipForward}
+          onSkipBackward={skipBackward}
+          onReset={reset}
+        />
       </View>
     </View>
   );
