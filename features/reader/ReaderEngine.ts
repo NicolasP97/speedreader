@@ -2,7 +2,6 @@ import { ReaderEngineOptions, ReaderState } from "./types";
 
 export class ReaderEngine {
   private length: number;
-  private wpm: number;
 
   private index = -1;
   private state: ReaderState = "idle";
@@ -18,16 +17,9 @@ export class ReaderEngine {
     }
 
     this.length = options.length;
-    this.wpm = options.wpm;
     this.getDurationMs = options.getDurationMs;
     this.onIndexChange = options.onIndexChange;
     this.onStateChange = options.onStateChange;
-  }
-
-  /** 🔹 Laufzeitänderung der Lesegeschwindigkeit */
-  setWpm(wpm: number) {
-    if (wpm <= 0) return;
-    this.wpm = wpm;
   }
 
   play() {

@@ -26,6 +26,7 @@ interface UseReaderResult {
 export function useReader(options: UseReaderOptions): UseReaderResult {
   const words = options.words ?? [];
   const wpm = options.wpm;
+  const wpmRef = useRef(wpm); // useRef wichtig für live wpm-Änderung
 
   const engineRef = useRef<ReaderEngine | null>(null);
 
@@ -45,11 +46,13 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
     engineRef.current = new ReaderEngine({
       length: words.length,
-      wpm,
+      // Live wpm Änderung, da wpmRef.current immer aktuell ist
       getDurationMs: (index: number) => {
         const word = words[index]?.word;
-        if (!word) return wpmToMs(wpm);
-        return getWordDurationMs(word, wpm);
+        const currentWpm = wpmRef.current;
+
+        if (!word) return wpmToMs(currentWpm);
+        return getWordDurationMs(word, currentWpm);
       },
       onIndexChange: (index) => {
         setIndex(index);
@@ -62,7 +65,7 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
         setIsPlaying(state === "playing");
       },
     });
-  }, [options.textId]); // 🔥 nicht words, nicht length
+  }, [options.textId]); // 🔥 nicht words, nicht length, sondern eindeutige Text ID
 
   useEffect(() => {
     return () => {
@@ -71,10 +74,10 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
     };
   }, []);
 
-  // 🔹 WPM-Änderungen an Engine weiterreichen
+  // wpmRef bei jeder Änderung aktualisieren
   useEffect(() => {
-    engineRef.current?.setWpm(options.wpm);
-  }, [options.wpm]);
+    wpmRef.current = wpm;
+  }, [wpm]);
 
   const play = () => {
     engineRef.current?.play();
@@ -99,8 +102,6 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const currentPreparedWord =
     index >= 0 && index < words.length ? words[index] : null;
-
-  console.log("useReader currentPreparedWord: ", currentPreparedWord);
 
   return {
     currentPreparedWord,

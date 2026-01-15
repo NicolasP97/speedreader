@@ -22,7 +22,6 @@ export default function ReaderScreen() {
 
   // Text-Tokens aus readerTextContext beziehen
   const { tokens, textId } = useReaderText();
-  console.log("reader tokens: ", tokens);
 
   const preparedWords = useMemo(() => {
     if (!tokens || tokens.length === 0) return [];
