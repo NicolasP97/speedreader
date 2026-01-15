@@ -14,11 +14,9 @@ export class ReaderEngine {
   }
 
   setWords(words: PreparedWord[]) {
+    this.reset();
     this.words = words;
-
-    if (this.index >= words.length) {
-      this.index = words.length - 1;
-    }
+    this.index = -1;
   }
 
   private onWordChange: ReaderEngineOptions["onWordChange"];
@@ -89,13 +87,11 @@ export class ReaderEngine {
       return;
     }
     this.skipTo(this.index + count);
-    console.log("Forward 2 index: ", this.index);
   }
 
   skipBackward(count: number = 1) {
     if (this.index >= 1) {
       this.skipTo(this.index - count);
-      console.log("Backward index: ", this.index);
     }
   }
 

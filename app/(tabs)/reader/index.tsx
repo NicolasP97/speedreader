@@ -2,7 +2,6 @@ import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
 import { AppText } from "../../../components/ui/AppText";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
-import { tokenizeText } from "@/features/text/tokenize";
 import { prepareWords } from "@/features/reader/prepareWords";
 import { TransportControls } from "@/components/reader/TransportControls";
 import { ReaderControls } from "@/components/reader/ReaderControls";
@@ -23,6 +22,7 @@ export default function ReaderScreen() {
 
   // Text-Tokens aus readerTextContext beziehen
   const { tokens } = useReaderText();
+  console.log("reader tokens: ", tokens);
 
   const preparedWords = useMemo(() => {
     if (!tokens || tokens.length === 0) return [];
@@ -48,6 +48,10 @@ export default function ReaderScreen() {
   });
 
   const canPlay = index < preparedWords.length - 1;
+
+  console.log("reader preparedWords: ", preparedWords);
+  console.log("reader currentPreparedWord: ", currentPreparedWord);
+  console.log("reader index: ", index);
 
   return (
     <View style={styles.container}>

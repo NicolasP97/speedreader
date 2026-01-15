@@ -23,6 +23,7 @@ interface UseReaderResult {
 
 export function useReader(options: UseReaderOptions): UseReaderResult {
   const words = options.words ?? [];
+  console.log("useReader words: ", words);
 
   const engineRef = useRef<ReaderEngine | null>(null);
 
@@ -31,30 +32,40 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
   const [index, setIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // 🔹 Engine einmal (oder bei neuem Text) erstellen
+  console.log("useReader currentPreparedWord: ", currentPreparedWord);
+
   useEffect(() => {
-    if (!words || words.length === 0) return;
-
-    if (!engineRef.current && words.length > 0) {
-      engineRef.current = new ReaderEngine({
-        words,
-        wpm: options.wpm,
-        onWordChange: (preparedWord, index) => {
-          setCurrentPreparedWord(preparedWord);
-          setIndex(index);
-
-          // Immer Haptik beim Erreichen des Textendes
-          if (index === words.length - 1) {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          }
-        },
-        onStateChange: (state) => {
-          setIsPlaying(state === "playing");
-        },
-      });
+    if (!words || words.length === 0) {
+      engineRef.current?.reset();
+      engineRef.current = null;
+      setCurrentPreparedWord(null);
+      setIndex(-1);
+      setIsPlaying(false);
+      return;
     }
-  }, []);
 
+    // Alte Engine sauber entsorgen
+    engineRef.current?.reset();
+
+    engineRef.current = new ReaderEngine({
+      words,
+      wpm: options.wpm,
+      onWordChange: (preparedWord, index) => {
+        setCurrentPreparedWord(preparedWord);
+        setIndex(index);
+
+        // 🔥 Jetzt korrekt, da closure frisch ist
+        if (index === words.length - 1) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        }
+      },
+      onStateChange: (state) => {
+        setIsPlaying(state === "playing");
+      },
+    });
+  }, [words]);
+
+  // 🔹 Text-Änderungen an Engine weiterreichen
   useEffect(() => {
     if (!engineRef.current) return;
     engineRef.current.setWords(words);

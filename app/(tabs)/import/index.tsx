@@ -31,6 +31,7 @@ export default function ImportScreen() {
   function handleLoad() {
     if (!canLoad) return;
     setRawText(trimmed);
+    console.log("Text wird in Context gepusht");
     router.push("/reader");
   }
 
