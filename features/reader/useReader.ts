@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { ReaderEngine } from "./ReaderEngine";
 import { PreparedWord } from "./prepareWords";
+import { getWordDurationMs, wpmToMs } from "../../utils/timing";
 
 interface UseReaderOptions {
   words: PreparedWord[];
   wpm: number;
+  textId: number;
 }
 
 interface UseReaderResult {
@@ -23,38 +25,35 @@ interface UseReaderResult {
 
 export function useReader(options: UseReaderOptions): UseReaderResult {
   const words = options.words ?? [];
-  console.log("useReader words: ", words);
+  const wpm = options.wpm;
 
   const engineRef = useRef<ReaderEngine | null>(null);
 
-  const [currentPreparedWord, setCurrentPreparedWord] =
-    useState<PreparedWord | null>(null);
   const [index, setIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  console.log("useReader currentPreparedWord: ", currentPreparedWord);
 
   useEffect(() => {
     if (!words || words.length === 0) {
       engineRef.current?.reset();
       engineRef.current = null;
-      setCurrentPreparedWord(null);
       setIndex(-1);
       setIsPlaying(false);
       return;
     }
 
-    // Alte Engine sauber entsorgen
     engineRef.current?.reset();
 
     engineRef.current = new ReaderEngine({
-      words,
-      wpm: options.wpm,
-      onWordChange: (preparedWord, index) => {
-        setCurrentPreparedWord(preparedWord);
+      length: words.length,
+      wpm,
+      getDurationMs: (index: number) => {
+        const word = words[index]?.word;
+        if (!word) return wpmToMs(wpm);
+        return getWordDurationMs(word, wpm);
+      },
+      onIndexChange: (index) => {
         setIndex(index);
 
-        // 🔥 Jetzt korrekt, da closure frisch ist
         if (index === words.length - 1) {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         }
@@ -63,13 +62,7 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
         setIsPlaying(state === "playing");
       },
     });
-  }, [words]);
-
-  // 🔹 Text-Änderungen an Engine weiterreichen
-  useEffect(() => {
-    if (!engineRef.current) return;
-    engineRef.current.setWords(words);
-  }, [words]);
+  }, [options.textId]); // 🔥 nicht words, nicht length
 
   useEffect(() => {
     return () => {
@@ -93,7 +86,6 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
 
   const reset = () => {
     engineRef.current?.reset();
-    setCurrentPreparedWord(null);
     setIndex(-1);
   };
 
@@ -104,6 +96,11 @@ export function useReader(options: UseReaderOptions): UseReaderResult {
   const skipBackward = () => {
     engineRef.current?.skipBackward(1);
   };
+
+  const currentPreparedWord =
+    index >= 0 && index < words.length ? words[index] : null;
+
+  console.log("useReader currentPreparedWord: ", currentPreparedWord);
 
   return {
     currentPreparedWord,

@@ -21,7 +21,7 @@ export default function ReaderScreen() {
   const FRAME_HEIGHT = height * 0.1;
 
   // Text-Tokens aus readerTextContext beziehen
-  const { tokens } = useReaderText();
+  const { tokens, textId } = useReaderText();
   console.log("reader tokens: ", tokens);
 
   const preparedWords = useMemo(() => {
@@ -45,13 +45,17 @@ export default function ReaderScreen() {
   } = useReader({
     words: preparedWords,
     wpm,
+    textId,
   });
 
   const canPlay = index < preparedWords.length - 1;
 
-  console.log("reader preparedWords: ", preparedWords);
-  console.log("reader currentPreparedWord: ", currentPreparedWord);
-  console.log("reader index: ", index);
+  console.log(
+    "reader index",
+    index,
+    "reader currentPreparedWord",
+    currentPreparedWord
+  );
 
   return (
     <View style={styles.container}>
@@ -75,7 +79,7 @@ export default function ReaderScreen() {
             justifyContent: "center",
           }}
         >
-          {currentPreparedWord ? (
+          {index >= 0 && currentPreparedWord ? (
             <WordRenderer
               preparedWord={currentPreparedWord}
               fontFamily="Inconsolata"

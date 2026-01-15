@@ -1,40 +1,26 @@
-import { getWordDurationMs } from "../../utils/timing";
 import { ReaderEngineOptions, ReaderState } from "./types";
-import { PreparedWord } from "./prepareWords";
 
 export class ReaderEngine {
-  private words: PreparedWord[];
+  private length: number;
   private wpm: number;
-
-  /** Zentraler State-Setter */
-  private setState(state: ReaderState) {
-    if (this.state === state) return;
-    this.state = state;
-    this.onStateChange?.(state);
-  }
-
-  setWords(words: PreparedWord[]) {
-    this.reset();
-    this.words = words;
-    this.index = -1;
-  }
-
-  private onWordChange: ReaderEngineOptions["onWordChange"];
-  private onStateChange?: ReaderEngineOptions["onStateChange"];
 
   private index = -1;
   private state: ReaderState = "idle";
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
 
+  private getDurationMs: (index: number) => number;
+  private onIndexChange: (index: number) => void;
+  private onStateChange?: (state: ReaderState) => void;
+
   constructor(options: ReaderEngineOptions) {
-    if (!options.words) {
-      throw new Error("ReaderEngine: words must be defined");
+    if (options.length <= 0) {
+      throw new Error("ReaderEngine: length must be > 0");
     }
 
-    this.words = options.words;
+    this.length = options.length;
     this.wpm = options.wpm;
-    this.onWordChange = options.onWordChange;
-    // 🔹 NEU
+    this.getDurationMs = options.getDurationMs;
+    this.onIndexChange = options.onIndexChange;
     this.onStateChange = options.onStateChange;
   }
 
@@ -46,20 +32,11 @@ export class ReaderEngine {
 
   play() {
     if (this.state === "playing") return;
-    if (this.words.length === 0) return;
-
-    //  Am Ende des Textes: nichts tun
-    if (this.index === this.words.length - 1) {
-      this.setState("paused");
-      return;
-    }
-
-    if (this.wpm <= 0) {
-      throw new Error("ReaderEngine: WPM must be set before play()");
-    }
+    if (this.index >= this.length - 1) return;
 
     if (this.index === -1) {
       this.index = 0;
+      this.onIndexChange(this.index);
     }
 
     this.setState("playing");
@@ -67,79 +44,70 @@ export class ReaderEngine {
   }
 
   pause() {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
+    this.clearTimer();
+    this.setState("paused");
+  }
+
+  reset() {
+    this.clearTimer();
+    this.index = -1;
+    this.setState("idle");
+  }
+
+  skipForward(count = 1) {
+    this.skipTo(this.index + count);
+  }
+
+  skipBackward(count = 1) {
+    this.skipTo(this.index - count);
+  }
+
+  private skipTo(targetIndex: number) {
+    this.clearTimer();
+
+    const clampedIndex = Math.max(-1, Math.min(targetIndex, this.length - 1));
+
+    this.index = clampedIndex;
+
+    if (this.index >= 0) {
+      this.onIndexChange(this.index);
     }
 
     this.setState("paused");
   }
 
-  reset() {
-    console.log("Reset index: ", this.index);
-    this.pause();
-    this.index = -1;
-    this.setState("idle");
-  }
-
-  skipForward(count: number = 1) {
-    if (this.index >= this.words.length - 1) {
-      return;
-    }
-    this.skipTo(this.index + count);
-  }
-
-  skipBackward(count: number = 1) {
-    if (this.index >= 1) {
-      this.skipTo(this.index - count);
-    }
-  }
-
-  private skipTo(targetIndex: number) {
-    // 1. Immer pausieren
-    this.pause();
-
-    // 2. Clamp Index
-    const clampedIndex = Math.max(
-      0,
-      Math.min(targetIndex, this.words.length - 1)
-    );
-
-    this.index = clampedIndex;
-
-    // 3. Sofort rendern
-    const preparedWord = this.words[this.index];
-    if (!preparedWord) return;
-
-    this.onWordChange(preparedWord, this.index);
-  }
-
   private tick() {
     if (this.state !== "playing") return;
 
-    if (this.index < 0 || this.index >= this.words.length) {
-      this.pause();
+    if (this.index < 0 || this.index >= this.length) {
+      this.reset();
       return;
     }
 
-    const preparedWord = this.words[this.index];
-    if (!preparedWord) {
-      this.pause();
-      return;
-    }
-
-    this.onWordChange(preparedWord, this.index);
-
-    const duration = getWordDurationMs(preparedWord.word, this.wpm);
+    const duration = this.getDurationMs(this.index);
 
     this.timeoutId = setTimeout(() => {
-      if (this.index >= this.words.length - 1) {
-        this.pause();
+      if (this.index >= this.length - 1) {
+        this.setState("idle");
         return;
       }
 
       this.index += 1;
+      this.onIndexChange(this.index);
       this.tick();
     }, duration);
+  }
+
+  private setState(state: ReaderState) {
+    if (this.state === state) return;
+    this.state = state;
+    this.onStateChange?.(state);
+  }
+
+  private clearTimer() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
   }
 }

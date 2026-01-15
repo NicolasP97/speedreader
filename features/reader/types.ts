@@ -1,12 +1,10 @@
-import { PreparedWord } from "./prepareWords";
-
 export type ReaderState = "idle" | "playing" | "paused";
 
 export interface ReaderEngineOptions {
-  words: PreparedWord[];
+  length: number;
   wpm: number;
-  onWordChange: (word: PreparedWord, index: number) => void;
+  getDurationMs: (index: number) => number;
 
-  // 🔹 NEU: Informationsweitergabe an UI das Ende erreicht wurde -> Pause button -> Play buttons
+  onIndexChange: (index: number) => void;
   onStateChange?: (state: ReaderState) => void;
 }
