@@ -1,4 +1,4 @@
-import { View, StyleSheet, useWindowDimensions } from "react-native";
+import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { useEffect, useMemo, useRef } from "react";
 
 import { WordRenderer } from "@/components/reader/WordRenderer";
@@ -11,6 +11,8 @@ import { useReaderText } from "@/features/text/readerTextContext";
 import { useReaderMode } from "@/features/readerMode/ReaderModeContext";
 import { useWpmController } from "@/features/wpm/useWpmController";
 import { useWpmRampController } from "@/features/onboarding/useWpmRampController";
+import { AppText } from "@/components/ui/AppText";
+import { colors } from "@/constants/colors";
 
 const WPM_RAMP = [
   { afterMs: 0, wpm: 300 },
@@ -68,9 +70,10 @@ export default function OnboardingReaderScreen() {
 
   // Onboarding-Ende erkennen
   useEffect(() => {
+    if (preparedWords.length === 0) return;
+
     if (reader.index === preparedWords.length - 1) {
       finishOnboarding();
-      clearText();
     }
   }, [reader.index, preparedWords.length, finishOnboarding]);
 
@@ -96,6 +99,17 @@ export default function OnboardingReaderScreen() {
         onSkipBackward={() => {}}
         onReset={() => {}}
       />
+      <View style={styles.finish}>
+        <AppText style={{ fontSize: 24, fontWeight: "800" }}>
+          WPM: {wpmRef.current}
+        </AppText>
+        <Pressable
+          style={[styles.button, { marginTop: 20 }]}
+          onPress={finishOnboarding}
+        >
+          <AppText>Finish Onboarding</AppText>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -109,5 +123,16 @@ const styles = StyleSheet.create({
     height: 120,
     justifyContent: "center",
     alignItems: "center",
+  },
+  finish: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 });
