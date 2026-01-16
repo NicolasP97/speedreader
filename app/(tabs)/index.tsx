@@ -14,10 +14,10 @@ export default function Index() {
         backgroundColor: colors.background,
       }}
     >
+      <AppText>Home Screen</AppText>
       <Pressable style={styles.button} onPress={startOnboarding}>
-        Onboarding Starten
+        <AppText>Onboarding Starten</AppText>
       </Pressable>
-      <AppText>Index Screen wo sind Tabs.</AppText>
     </View>
   );
 }

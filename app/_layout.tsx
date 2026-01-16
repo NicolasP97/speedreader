@@ -4,6 +4,8 @@ import { ActivityIndicator, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { colors } from "../constants/colors";
 import { useFonts } from "expo-font";
+import { ReaderTextProvider } from "@/features/text/readerTextContext";
+import { ReaderModeProvider } from "@/features/readerMode/ReaderModeContext";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -19,9 +21,13 @@ export default function RootLayout() {
     );
   }
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar style="light" backgroundColor={colors.background} />
-      <Slot />
-    </View>
+    <ReaderTextProvider>
+      <ReaderModeProvider>
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <StatusBar style="light" backgroundColor={colors.background} />
+          <Slot />
+        </View>
+      </ReaderModeProvider>
+    </ReaderTextProvider>
   );
 }
