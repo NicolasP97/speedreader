@@ -16,11 +16,24 @@ import { colors } from "@/constants/colors";
 
 const WPM_RAMP = [
   { afterMs: 0, wpm: 300 },
-  { afterMs: 6000, wpm: 375 },
-  { afterMs: 12000, wpm: 450 },
-  { afterMs: 18000, wpm: 600 },
-  { afterMs: 24000, wpm: 750 },
-  { afterMs: 30000, wpm: 900 },
+
+  // Einstieg + Erklärung "normales Lesen"
+  { afterMs: 51000, wpm: 375 },
+
+  // "Lass uns einen Schritt weitergehen"
+  { afterMs: 72000, wpm: 450 },
+
+  // "Probieren wir es aus"
+  { afterMs: 86000, wpm: 600 },
+
+  // "Gehen wir weiter"
+  { afterMs: 102000, wpm: 750 },
+
+  // "Lass uns noch einen Schritt gehen"
+  { afterMs: 112000, wpm: 900 },
+
+  // Optional: nach dem kurzen Peak leicht zurück
+  { afterMs: 115000, wpm: 300 },
 ];
 
 export default function OnboardingReaderScreen() {
