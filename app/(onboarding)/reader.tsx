@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { TransportControls } from "@/components/reader/TransportControls";
 import { prepareWords } from "@/features/reader/prepareWords";
+import { ONBOARDING_TEXT } from "@/features/onboarding/onboardingText";
 import { useReader } from "@/features/reader/useReader";
 import { useReaderText } from "@/features/text/readerTextContext";
 
@@ -26,8 +27,13 @@ export default function OnboardingReaderScreen() {
 
   const fontSize = 36;
 
-  const { tokens, textId } = useReaderText();
+  const { tokens, textId, setRawText, clearText } = useReaderText();
   const { finishOnboarding } = useReaderMode();
+
+  // Setze den oboarding Text in den Reader Context
+  useEffect(() => {
+    setRawText(ONBOARDING_TEXT);
+  }, [setRawText]);
 
   // ❗ WPM lives only in ref
   const wpmRef = useRef(300);
@@ -64,6 +70,7 @@ export default function OnboardingReaderScreen() {
   useEffect(() => {
     if (reader.index === preparedWords.length - 1) {
       finishOnboarding();
+      clearText();
     }
   }, [reader.index, preparedWords.length, finishOnboarding]);
 
