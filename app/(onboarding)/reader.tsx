@@ -1,5 +1,5 @@
 import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { TransportControls } from "@/components/reader/TransportControls";
@@ -18,26 +18,38 @@ const WPM_RAMP = [
   { afterMs: 0, wpm: 300 },
 
   // Einstieg + Erklärung "normales Lesen"
-  { afterMs: 51000, wpm: 375 },
+  { afterMs: 40000, wpm: 375 },
 
   // "Lass uns einen Schritt weitergehen"
-  { afterMs: 72000, wpm: 450 },
+  { afterMs: 64000, wpm: 450 },
 
   // "Probieren wir es aus"
-  { afterMs: 86000, wpm: 600 },
+  { afterMs: 78500, wpm: 600 },
 
   // "Gehen wir weiter"
-  { afterMs: 102000, wpm: 750 },
+  { afterMs: 91000, wpm: 750 },
 
   // "Lass uns noch einen Schritt gehen"
-  { afterMs: 112000, wpm: 900 },
+  { afterMs: 101000, wpm: 900 },
 
-  // Optional: nach dem kurzen Peak leicht zurück
-  { afterMs: 115000, wpm: 300 },
+  // Fade out zum Ende
+  { afterMs: 107000, wpm: 450 },
+
+  { afterMs: 108500, wpm: 400 },
+
+  { afterMs: 110000, wpm: 350 },
+
+  { afterMs: 112500, wpm: 300 },
 ];
 
 export default function OnboardingReaderScreen() {
+  // FÜR TESTING ##################
+  const [rampEnabled, setRampEnabled] = useState(false);
+  // ##########################
+
   const { width, height } = useWindowDimensions();
+  const frameHeight = height * 0.1;
+  const frameWidth = width * 0.9;
   const ORP_X = width * 0.35;
 
   const fontSize = 36;
@@ -73,13 +85,19 @@ export default function OnboardingReaderScreen() {
   useWpmRampController({
     steps: WPM_RAMP,
     setWpm: setWpmByOnboarding,
-    enabled: true,
+    enabled: rampEnabled,
   });
 
   // Autostart beim Mount
   useEffect(() => {
     reader.play();
   }, []);
+
+  useEffect(() => {
+    if (!reader.isPlaying) {
+      setRampEnabled(false);
+    }
+  }, [reader.isPlaying]);
 
   // Onboarding-Ende erkennen
   useEffect(() => {
@@ -90,6 +108,11 @@ export default function OnboardingReaderScreen() {
     }
   }, [reader.index, preparedWords.length, finishOnboarding]);
 
+  const handlePlay = () => {
+    setRampEnabled(true);
+    reader.play();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wordFrame}>
@@ -98,6 +121,9 @@ export default function OnboardingReaderScreen() {
             preparedWord={reader.currentPreparedWord}
             fontFamily="Inconsolata"
             fontSize={fontSize}
+            orpX={ORP_X}
+            frameWidth={frameWidth}
+            frameHeight={frameHeight}
           />
         )}
       </View>
@@ -106,7 +132,7 @@ export default function OnboardingReaderScreen() {
       <TransportControls
         isPlaying={reader.isPlaying}
         canPlay={true}
-        onPlay={reader.play}
+        onPlay={handlePlay}
         onPause={reader.pause}
         onSkipForward={() => {}}
         onSkipBackward={() => {}}
@@ -133,7 +159,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   wordFrame: {
-    height: 120,
     justifyContent: "center",
     alignItems: "center",
   },

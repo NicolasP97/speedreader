@@ -8,12 +8,18 @@ interface WordRendererProps {
   preparedWord: PreparedWord;
   fontFamily: string;
   fontSize: number;
+  orpX: number;
+  frameWidth: number;
+  frameHeight: number;
 }
 
 const WordRendererComponent = ({
   preparedWord,
   fontFamily,
   fontSize,
+  orpX,
+  frameWidth,
+  frameHeight,
 }: WordRendererProps) => {
   const { word, orpIndex, leftOffset } = preparedWord;
 
@@ -24,23 +30,31 @@ const WordRendererComponent = ({
   const right = word.slice(orpIndex + 1);
 
   return (
-    <View style={[styles.wordContainer, { left: leftOffset }]}>
-      <AppText style={{ fontSize: fontSize, fontWeight: "600", fontFamily }}>
-        {left}
-      </AppText>
-      <AppText
-        style={{
-          fontSize: fontSize,
-          fontWeight: "600",
-          fontFamily,
-          color: colors.primary,
-        }}
-      >
-        {orpChar}
-      </AppText>
-      <AppText style={{ fontSize: fontSize, fontWeight: "600", fontFamily }}>
-        {right}
-      </AppText>
+    <View
+      style={[styles.fixationFrame, { width: frameWidth, height: frameHeight }]}
+    >
+      {/* ORP Marker oben */}
+      <View style={[styles.orpMarker, { left: orpX, top: 0 }]} />
+      <View style={[styles.wordContainer, { left: leftOffset }]}>
+        <AppText style={{ fontSize: fontSize, fontWeight: "600", fontFamily }}>
+          {left}
+        </AppText>
+        <AppText
+          style={{
+            fontSize: fontSize,
+            fontWeight: "600",
+            fontFamily,
+            color: colors.primary,
+          }}
+        >
+          {orpChar}
+        </AppText>
+        <AppText style={{ fontSize: fontSize, fontWeight: "600", fontFamily }}>
+          {right}
+        </AppText>
+      </View>
+      {/* ORP Marker unten */}
+      <View style={[styles.orpMarker, { left: orpX, bottom: 0 }]} />
     </View>
   );
 };
@@ -52,5 +66,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexDirection: "row",
     alignItems: "center",
+  },
+  fixationFrame: {
+    position: "relative",
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "grey",
+    justifyContent: "center",
+  },
+  orpMarker: {
+    position: "absolute",
+    width: 2,
+    height: 12,
+    backgroundColor: colors.textSecondary,
   },
 });

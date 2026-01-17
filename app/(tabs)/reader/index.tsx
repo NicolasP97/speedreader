@@ -59,33 +59,36 @@ export default function ReaderScreen() {
   return (
     <View style={styles.container}>
       {/* Word display */}
-      <View
-        style={[
-          styles.fixationFrame,
-          { width: FRAME_WIDTH, height: FRAME_HEIGHT },
-        ]}
-      >
-        {/* ORP Marker oben */}
-        <View style={[styles.orpMarker, { left: ORP_X, top: 0 }]} />
 
-        {/* Word Renderer */}
-        <View
-          style={{
-            position: "relative",
-            width: "100%",
-            height: FRAME_HEIGHT,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {index >= 0 && currentPreparedWord ? (
-            <WordRenderer
-              preparedWord={currentPreparedWord}
-              fontFamily="Inconsolata"
-              fontSize={fontSize}
-            />
-          ) : (
-            <View style={{ flexDirection: "row" }}>
+      {/* Word Renderer */}
+      <View
+        style={{
+          position: "relative",
+          width: "100%",
+          height: FRAME_HEIGHT,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {index >= 0 && currentPreparedWord ? (
+          <WordRenderer
+            preparedWord={currentPreparedWord}
+            fontFamily="Inconsolata"
+            fontSize={fontSize}
+            orpX={ORP_X}
+            frameWidth={FRAME_WIDTH}
+            frameHeight={FRAME_HEIGHT}
+          />
+        ) : (
+          <View
+            style={[
+              styles.fixationFrame,
+              { width: FRAME_WIDTH, height: FRAME_HEIGHT },
+            ]}
+          >
+            {/* ORP Marker oben */}
+            <View style={[styles.orpMarker, { left: ORP_X, top: 0 }]} />
+            <View style={styles.pressPlayText}>
               <AppText
                 variant="secondary"
                 style={{ fontSize: 36, fontFamily: "Inconsolata" }}
@@ -109,10 +112,10 @@ export default function ReaderScreen() {
                 ay to start
               </AppText>
             </View>
-          )}
-        </View>
-        {/* ORP Marker unten */}
-        <View style={[styles.orpMarker, { left: ORP_X, bottom: 0 }]} />
+            {/* ORP Marker unten */}
+            <View style={[styles.orpMarker, { left: ORP_X, bottom: 0 }]} />
+          </View>
+        )}
       </View>
 
       {/* Controls */}
@@ -154,6 +157,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderWidth: 1,
     borderColor: "grey",
+    justifyContent: "center",
+  },
+  pressPlayText: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 
   orpMarker: {
