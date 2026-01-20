@@ -110,8 +110,11 @@ export default function OnboardingReaderScreen() {
     if (preparedWords.length === 0) return;
 
     if (reader.index === preparedWords.length - 1) {
-      audio.pause();
-      finishOnboarding();
+      audio.fadeTo(0, 800);
+      setTimeout(() => {
+        (audio.pause(), 800);
+      });
+      setTimeout(finishOnboarding, 800);
     }
   }, [reader.index, preparedWords.length, finishOnboarding]);
 
@@ -122,8 +125,12 @@ export default function OnboardingReaderScreen() {
   };
 
   const handlePause = () => {
-    reader.pause();
-    audio.pause();
+    audio.fadeTo(0, 300);
+
+    setTimeout(() => {
+      reader.pause();
+      audio.pause();
+    }, 300);
   };
 
   return (

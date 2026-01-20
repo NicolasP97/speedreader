@@ -19,19 +19,17 @@ export function useAudioPlayer({
    * (nur relevant, wenn Volume dynamisch geändert wird)
    */
   const volumeRef = useRef(volume);
+  const fadeFrameRef = useRef<number | null>(null);
 
   /**
    * Initiale & laufende Konfiguration
    */
   useEffect(() => {
     player.loop = loop;
-  }, [player, loop]);
-
-  useEffect(() => {
     player.volume = volume;
-    volumeRef.current = volume;
-  }, [player, volume]);
+  }, [player, loop, volume]);
 
+  // --- Core controls ---
   const play = useCallback(() => {
     player.play();
   }, [player]);
@@ -40,6 +38,44 @@ export function useAudioPlayer({
     player.pause();
   }, [player]);
 
+  // --- Fade logic ---
+  const cancelFade = () => {
+    if (fadeFrameRef.current !== null) {
+      cancelAnimationFrame(fadeFrameRef.current);
+      fadeFrameRef.current = null;
+    }
+  };
+
+  const fadeTo = useCallback(
+    (targetVolume: number, durationMs: number) => {
+      cancelFade();
+
+      if (player.muted) return;
+
+      const startVolume = player.volume ?? 0;
+      const delta = targetVolume - startVolume;
+      const startTime = performance.now();
+
+      const tick = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+
+        player.volume = startVolume + delta * progress;
+
+        if (progress < 1) {
+          fadeFrameRef.current = requestAnimationFrame(tick);
+        } else {
+          player.volume = targetVolume;
+          fadeFrameRef.current = null;
+        }
+      };
+
+      fadeFrameRef.current = requestAnimationFrame(tick);
+    },
+    [player],
+  );
+
+  // --- Mute ---
   const mute = useCallback(() => {
     player.muted = true;
   }, [player]);
@@ -62,5 +98,6 @@ export function useAudioPlayer({
     mute,
     unmute,
     toggleMute,
+    fadeTo,
   };
 }
