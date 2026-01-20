@@ -52,7 +52,7 @@ export default function OnboardingReaderScreen() {
   const frameWidth = width * 0.9;
   const ORP_X = width * 0.35;
 
-  const fontSize = 36;
+  const fontSize = 34;
 
   const { tokens, textId, setRawText, clearText } = useReaderText();
   const { finishOnboarding } = useReaderMode();

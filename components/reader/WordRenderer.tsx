@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
     position: "relative",
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: "grey",
+    borderColor: "#333333",
     justifyContent: "center",
   },
   orpMarker: {
     position: "absolute",
-    width: 2,
+    width: 1.5,
     height: 12,
-    backgroundColor: colors.textSecondary,
+    backgroundColor: "#333333",
   },
 });

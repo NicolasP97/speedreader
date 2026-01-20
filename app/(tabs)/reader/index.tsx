@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
 import { AppText } from "../../../components/ui/AppText";
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { useReader } from "../../../features/reader/useReader";
@@ -53,7 +53,7 @@ export default function ReaderScreen() {
     "reader index",
     index,
     "reader currentPreparedWord",
-    currentPreparedWord
+    currentPreparedWord,
   );
 
   return (
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     position: "relative",
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: "grey",
+    borderColor: "#333333",
     justifyContent: "center",
   },
   pressPlayText: {
@@ -166,9 +166,9 @@ const styles = StyleSheet.create({
 
   orpMarker: {
     position: "absolute",
-    width: 2,
+    width: 1.5,
     height: 12,
-    backgroundColor: colors.textSecondary,
+    backgroundColor: "#333333",
   },
   controls: {
     paddingBottom: 40,
