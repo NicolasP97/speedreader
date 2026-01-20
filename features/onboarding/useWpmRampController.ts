@@ -18,29 +18,71 @@ export function useWpmRampController({
   setWpm,
   enabled,
 }: UseWpmRampControllerOptions) {
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const { mode } = useReaderMode();
 
+  const startTimeRef = useRef<number | null>(null);
+  const pausedAtRef = useRef<number | null>(null);
+  const totalPausedMsRef = useRef(0);
+  const currentStepRef = useRef(-1);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
-    if (!enabled) return;
     if (mode.kind !== "onboarding") return;
 
-    // Cleanup alte Timer
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
+    // --- Pause ---
+    if (!enabled) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
 
-    // Ramp starten
-    for (const step of steps) {
-      const id = setTimeout(() => {
-        setWpm(step.wpm);
-      }, step.afterMs);
+      if (pausedAtRef.current === null && startTimeRef.current !== null) {
+        pausedAtRef.current = performance.now();
+      }
 
-      timeoutsRef.current.push(id);
+      return;
     }
 
+    // --- Resume / Start ---
+    const now = performance.now();
+
+    if (startTimeRef.current === null) {
+      startTimeRef.current = now;
+    }
+
+    if (pausedAtRef.current !== null) {
+      totalPausedMsRef.current += now - pausedAtRef.current;
+      pausedAtRef.current = null;
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (startTimeRef.current === null) return;
+
+      const elapsedMs =
+        performance.now() - startTimeRef.current - totalPausedMsRef.current;
+
+      // Finde aktuellen Ramp-Step
+      let nextIndex = currentStepRef.current;
+
+      for (let i = 0; i < steps.length; i++) {
+        if (elapsedMs >= steps[i].afterMs) {
+          nextIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (nextIndex !== currentStepRef.current && nextIndex >= 0) {
+        currentStepRef.current = nextIndex;
+        setWpm(steps[nextIndex].wpm);
+      }
+    }, 100); // 10 Hz reicht locker
+
     return () => {
-      timeoutsRef.current.forEach(clearTimeout);
-      timeoutsRef.current = [];
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [enabled, mode.kind, steps, setWpm]);
 }

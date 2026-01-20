@@ -14,6 +14,8 @@ import { useWpmRampController } from "@/features/onboarding/useWpmRampController
 import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
 
+import { useAudioPlayer } from "@/features/audio/useAudioPlayer";
+
 const WPM_RAMP = [
   { afterMs: 0, wpm: 300 },
 
@@ -35,17 +37,21 @@ const WPM_RAMP = [
   // Fade out zum Ende
   { afterMs: 107000, wpm: 450 },
 
-  { afterMs: 108500, wpm: 400 },
+  { afterMs: 108500, wpm: 425 },
 
-  { afterMs: 110000, wpm: 350 },
+  { afterMs: 110000, wpm: 375 },
 
-  { afterMs: 112500, wpm: 300 },
+  { afterMs: 112500, wpm: 325 },
 ];
 
 export default function OnboardingReaderScreen() {
   // FÜR TESTING ##################
   const [rampEnabled, setRampEnabled] = useState(false);
   // ##########################
+
+  const audio = useAudioPlayer({
+    source: require("@/assets/audio/onboarding.mp3"),
+  });
 
   const { width, height } = useWindowDimensions();
   const frameHeight = height * 0.1;
@@ -104,6 +110,7 @@ export default function OnboardingReaderScreen() {
     if (preparedWords.length === 0) return;
 
     if (reader.index === preparedWords.length - 1) {
+      audio.pause();
       finishOnboarding();
     }
   }, [reader.index, preparedWords.length, finishOnboarding]);
@@ -111,6 +118,12 @@ export default function OnboardingReaderScreen() {
   const handlePlay = () => {
     setRampEnabled(true);
     reader.play();
+    audio.play();
+  };
+
+  const handlePause = () => {
+    reader.pause();
+    audio.pause();
   };
 
   return (
@@ -133,7 +146,7 @@ export default function OnboardingReaderScreen() {
         isPlaying={reader.isPlaying}
         canPlay={true}
         onPlay={handlePlay}
-        onPause={reader.pause}
+        onPause={handlePause}
         onSkipForward={() => {}}
         onSkipBackward={() => {}}
         onReset={() => {}}
@@ -147,6 +160,9 @@ export default function OnboardingReaderScreen() {
           onPress={finishOnboarding}
         >
           <AppText>Finish Onboarding</AppText>
+        </Pressable>
+        <Pressable onPress={audio.toggleMute} style={styles.button}>
+          <AppText>{audio.isMuted ? "Unmute" : "Mute"}</AppText>
         </Pressable>
       </View>
     </View>
