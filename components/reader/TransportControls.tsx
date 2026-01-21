@@ -5,6 +5,7 @@ import * as Haptics from "expo-haptics";
 interface TransportControlsProps {
   isPlaying: boolean;
   canPlay: boolean;
+  isOnboarding: boolean;
 
   onPlay: () => void;
   onPause: () => void;
@@ -16,6 +17,7 @@ interface TransportControlsProps {
 export function TransportControls({
   isPlaying,
   canPlay,
+  isOnboarding,
   onPlay,
   onPause,
   onSkipForward,
@@ -48,7 +50,7 @@ export function TransportControls({
         <Ionicons
           name="play-skip-back-circle-outline"
           size={36}
-          color="white"
+          color={isOnboarding ? "grey" : "white"}
         />
       </Pressable>
 
@@ -68,7 +70,7 @@ export function TransportControls({
         <Ionicons
           name="play-skip-forward-circle-outline"
           size={36}
-          color="white"
+          color={isOnboarding ? "grey" : "white"}
         />
       </Pressable>
       <Pressable style={styles.playButton} onPress={handleReset}>

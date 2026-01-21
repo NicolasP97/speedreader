@@ -126,6 +126,7 @@ export default function ReaderScreen() {
         <TransportControls
           isPlaying={isPlaying}
           canPlay={canPlay}
+          isOnboarding={false}
           onPlay={play}
           onPause={pause}
           onSkipForward={skipForward}

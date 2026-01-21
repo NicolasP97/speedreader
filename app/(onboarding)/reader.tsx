@@ -100,9 +100,9 @@ export default function OnboardingReaderScreen() {
   });
 
   // Autostart beim Mount
-  useEffect(() => {
-    reader.play();
-  }, []);
+  // useEffect(() => {
+  //   reader.play();
+  // }, []);
 
   useEffect(() => {
     if (!reader.isPlaying) {
@@ -216,6 +216,7 @@ export default function OnboardingReaderScreen() {
         <TransportControls
           isPlaying={reader.isPlaying}
           canPlay={true}
+          isOnboarding={true}
           onPlay={handlePlay}
           onPause={handlePause}
           onSkipForward={() => {}}
