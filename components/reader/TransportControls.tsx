@@ -1,4 +1,6 @@
-import { View, Pressable, StyleSheet, Text } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
 interface TransportControlsProps {
   isPlaying: boolean;
@@ -20,25 +22,57 @@ export function TransportControls({
   onSkipBackward,
   onReset,
 }: TransportControlsProps) {
+  const handleSkipForward = () => {
+    onSkipForward();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handleSkipBackward = () => {
+    onSkipBackward();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handlePlay = () => {
+    onPlay();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handlePause = () => {
+    onPause();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+  const handleReset = () => {
+    onReset();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  };
   return (
     <View style={styles.container}>
       <Pressable style={styles.sideButton} onPress={onSkipBackward}>
-        <Text style={styles.sideLabel}>◀︎</Text>
+        <Ionicons
+          name="play-skip-back-circle-outline"
+          size={36}
+          color="white"
+        />
       </Pressable>
 
       <Pressable
         style={[styles.playButton, !canPlay && styles.playButtonDisabled]}
-        onPress={isPlaying ? onPause : onPlay}
+        onPress={isPlaying ? handlePause : handlePlay}
         disabled={!canPlay && !isPlaying}
       >
-        <Text style={styles.playLabel}>{isPlaying ? "Pause" : "Play"}</Text>
+        <Ionicons
+          name={isPlaying ? "pause-circle-outline" : "play-circle-outline"}
+          size={48}
+          color="white"
+        />
       </Pressable>
 
       <Pressable style={styles.sideButton} onPress={onSkipForward}>
-        <Text style={styles.sideLabel}>▶︎</Text>
+        <Ionicons
+          name="play-skip-forward-circle-outline"
+          size={36}
+          color="white"
+        />
       </Pressable>
-      <Pressable style={styles.playButton} onPress={onReset}>
-        <Text style={styles.playLabel}>Reset</Text>
+      <Pressable style={styles.playButton} onPress={handleReset}>
+        <Ionicons name="refresh-circle-outline" size={48} color="white" />
       </Pressable>
     </View>
   );
@@ -49,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 24,
+    gap: 12,
     paddingVertical: 16,
   },
 
@@ -57,26 +91,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
 
-  sideLabel: {
-    color: "#fff",
-    fontSize: 20,
-    opacity: 0.7,
-  },
-
   playButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     borderRadius: 999,
-    backgroundColor: "#111",
   },
 
   playButtonDisabled: {
     opacity: 0.4,
-  },
-
-  playLabel: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
   },
 });
