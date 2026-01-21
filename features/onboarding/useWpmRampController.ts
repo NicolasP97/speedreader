@@ -11,12 +11,14 @@ interface UseWpmRampControllerOptions {
   steps: WpmRampStep[];
   setWpm: (wpm: number) => void;
   enabled: boolean;
+  resetKey?: number;
 }
 
 export function useWpmRampController({
   steps,
   setWpm,
   enabled,
+  resetKey,
 }: UseWpmRampControllerOptions) {
   const { mode } = useReaderMode();
 
@@ -85,4 +87,17 @@ export function useWpmRampController({
       }
     };
   }, [enabled, mode.kind, steps, setWpm]);
+
+  // HARD RESET des Timers
+  useEffect(() => {
+    startTimeRef.current = null;
+    pausedAtRef.current = null;
+    totalPausedMsRef.current = 0;
+    currentStepRef.current = -1;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [resetKey]);
 }

@@ -49,6 +49,8 @@ export default function OnboardingReaderScreen() {
   const [rampEnabled, setRampEnabled] = useState(false);
   // ##########################
 
+  const [rampResetKey, setRampResetKey] = useState(0);
+
   const audio = useAudioPlayer({
     source: require("@/assets/audio/onboarding.mp3"),
   });
@@ -92,6 +94,7 @@ export default function OnboardingReaderScreen() {
     steps: WPM_RAMP,
     setWpm: setWpmByOnboarding,
     enabled: rampEnabled,
+    resetKey: rampResetKey,
   });
 
   // Autostart beim Mount
@@ -133,6 +136,14 @@ export default function OnboardingReaderScreen() {
     }, 300);
   };
 
+  // Hier noch den Timer zurücksetzen
+  const handleReset = () => {
+    reader.reset();
+    audio.reset();
+    setRampEnabled(false);
+    setRampResetKey((k) => k + 1); // Timer auf Spielzeit 0
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wordFrame}>
@@ -156,7 +167,7 @@ export default function OnboardingReaderScreen() {
         onPause={handlePause}
         onSkipForward={() => {}}
         onSkipBackward={() => {}}
-        onReset={() => {}}
+        onReset={handleReset}
       />
       <View style={styles.finish}>
         <AppText style={{ fontSize: 24, fontWeight: "800" }}>

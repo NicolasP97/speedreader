@@ -49,12 +49,12 @@ export default function ReaderScreen() {
 
   const canPlay = index < preparedWords.length - 1;
 
-  console.log(
-    "reader index",
-    index,
-    "reader currentPreparedWord",
-    currentPreparedWord,
-  );
+  // console.log(
+  //   "reader index",
+  //   index,
+  //   "reader currentPreparedWord",
+  //   currentPreparedWord,
+  // );
 
   return (
     <View style={styles.container}>

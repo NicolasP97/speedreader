@@ -38,6 +38,11 @@ export function useAudioPlayer({
     player.pause();
   }, [player]);
 
+  const reset = useCallback(() => {
+    player.seekTo(0);
+    player.pause();
+  }, [player]);
+
   // --- Fade logic ---
   const cancelFade = () => {
     if (fadeFrameRef.current !== null) {
@@ -99,5 +104,6 @@ export function useAudioPlayer({
     unmute,
     toggleMute,
     fadeTo,
+    reset,
   };
 }
