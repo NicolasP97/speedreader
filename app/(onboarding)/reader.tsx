@@ -1,4 +1,6 @@
 import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { WordRenderer } from "@/components/reader/WordRenderer";
@@ -144,50 +146,102 @@ export default function OnboardingReaderScreen() {
     setRampResetKey((k) => k + 1); // Timer auf Spielzeit 0
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.wordFrame}>
-        {reader.currentPreparedWord && (
-          <WordRenderer
-            preparedWord={reader.currentPreparedWord}
-            fontFamily="Inconsolata"
-            fontSize={fontSize}
-            orpX={ORP_X}
-            frameWidth={frameWidth}
-            frameHeight={frameHeight}
-          />
-        )}
-      </View>
+  const handleMute = () => {
+    audio.toggleMute();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
 
-      {/* Minimal Controls: nur Pause/Play */}
-      <TransportControls
-        isPlaying={reader.isPlaying}
-        canPlay={true}
-        onPlay={handlePlay}
-        onPause={handlePause}
-        onSkipForward={() => {}}
-        onSkipBackward={() => {}}
-        onReset={handleReset}
-      />
-      <View style={styles.finish}>
-        <AppText style={{ fontSize: 24, fontWeight: "800" }}>
-          WPM: {wpmRef.current}
-        </AppText>
-        <Pressable
-          style={[styles.button, { marginTop: 20 }]}
-          onPress={finishOnboarding}
-        >
-          <AppText>Finish Onboarding</AppText>
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.muteButtonContainer}>
+        <Pressable onPress={handleMute} style={styles.muteButton}>
+          <Ionicons
+            name={audio.isMuted ? "volume-mute" : "volume-high"}
+            size={24}
+            color="white"
+          />
         </Pressable>
-        <Pressable onPress={audio.toggleMute} style={styles.button}>
-          <AppText>{audio.isMuted ? "Unmute" : "Mute"}</AppText>
-        </Pressable>
+      </View>
+      <View style={styles.container}>
+        <View style={styles.wordFrame}>
+          {reader.currentPreparedWord ? (
+            <WordRenderer
+              preparedWord={reader.currentPreparedWord}
+              fontFamily="Inconsolata"
+              fontSize={fontSize}
+              orpX={ORP_X}
+              frameWidth={frameWidth}
+              frameHeight={frameHeight}
+            />
+          ) : (
+            <View
+              style={[
+                styles.fixationFrame,
+                { width: frameWidth, height: frameHeight },
+              ]}
+            >
+              {/* ORP Marker oben */}
+              <View style={[styles.orpMarker, { left: ORP_X, top: 0 }]} />
+              <View style={styles.pressPlayText}>
+                <AppText
+                  variant="secondary"
+                  style={{ fontSize: 36, fontFamily: "Inconsolata" }}
+                >
+                  Press P
+                </AppText>
+                <AppText
+                  variant="secondary"
+                  style={{
+                    fontSize: 36,
+                    fontFamily: "Inconsolata",
+                    color: colors.primary,
+                  }}
+                >
+                  l
+                </AppText>
+                <AppText
+                  variant="secondary"
+                  style={{ fontSize: 36, fontFamily: "Inconsolata" }}
+                >
+                  ay to start
+                </AppText>
+              </View>
+              {/* ORP Marker unten */}
+              <View style={[styles.orpMarker, { left: ORP_X, bottom: 0 }]} />
+            </View>
+          )}
+        </View>
+
+        {/* Minimal Controls: nur Pause/Play */}
+        <TransportControls
+          isPlaying={reader.isPlaying}
+          canPlay={true}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          onSkipForward={() => {}}
+          onSkipBackward={() => {}}
+          onReset={handleReset}
+        />
+        <View style={styles.finish}>
+          <AppText style={{ fontSize: 24, fontWeight: "800" }}>
+            WPM: {wpmRef.current}
+          </AppText>
+          <Pressable
+            style={[styles.button, { marginTop: 20 }]}
+            onPress={finishOnboarding}
+          >
+            <AppText>Finish Onboarding</AppText>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -206,5 +260,32 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  muteButtonContainer: {
+    top: 50,
+    left: 20,
+  },
+  muteButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 999,
+  },
+  fixationFrame: {
+    position: "relative",
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "#333333",
+    justifyContent: "center",
+  },
+  pressPlayText: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  orpMarker: {
+    position: "absolute",
+    width: 1.5,
+    height: 12,
+    backgroundColor: "#333333",
   },
 });

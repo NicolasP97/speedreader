@@ -58,8 +58,6 @@ export default function ReaderScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Word display */}
-
       {/* Word Renderer */}
       <View
         style={{
