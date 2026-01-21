@@ -7,7 +7,8 @@ import { TransportControls } from "@/components/reader/TransportControls";
 import { ReaderControls } from "@/components/reader/ReaderControls";
 import { useReaderText } from "@/features/text/readerTextContext";
 import { colors } from "../../../constants/colors";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
@@ -48,6 +49,16 @@ export default function ReaderScreen() {
   });
 
   const canPlay = index < preparedWords.length - 1;
+
+  // Reader pausieren, wenn Tab gewechselt wird
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // Screen verliert Fokus → pausieren
+        pause();
+      };
+    }, [pause]),
+  );
 
   // console.log(
   //   "reader index",
