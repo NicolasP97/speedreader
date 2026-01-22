@@ -1,9 +1,10 @@
 import { View, StyleSheet } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
+import { prepareWords } from "@/features/reader/prepareWords";
 
 interface FixationPreviewProps {
-  fontFamily: string;
+  fontFamily: keyof typeof import("@/features/reader/prepareWords").MONO_GLYPH_WIDTH_FACTOR;
   fontSize: number;
   width: number;
   height: number;
@@ -17,22 +18,45 @@ export function FixationPreview({
   height,
   orpX,
 }: FixationPreviewProps) {
+  const word = fontFamily;
+
+  const [prepared] = prepareWords([word], {
+    fontSize,
+    fontWeight: "600",
+    orpX,
+    fontFamily,
+  });
+
+  if (!prepared) return null;
+
+  const { word: fullWord, orpIndex, leftOffset } = prepared;
+
+  const left = fullWord.slice(0, orpIndex);
+  const orpChar = fullWord.charAt(orpIndex);
+  const right = fullWord.slice(orpIndex + 1);
+
   return (
     <View style={[styles.fixationFrame, { width, height }]}>
+      {/* ORP Marker */}
       <View style={[styles.orpMarker, { left: orpX, top: 0 }]} />
 
-      <View style={styles.pressPlayText}>
-        <AppText variant="secondary" style={{ fontSize, fontFamily }}>
-          Press P
+      {/* Word */}
+      <View style={[styles.wordContainer, { left: leftOffset }]}>
+        <AppText style={{ fontSize, fontFamily, fontWeight: "600" }}>
+          {left}
         </AppText>
         <AppText
-          variant="secondary"
-          style={{ fontSize, fontFamily, color: colors.primary }}
+          style={{
+            fontSize,
+            fontFamily,
+            fontWeight: "600",
+            color: colors.primary,
+          }}
         >
-          l
+          {orpChar}
         </AppText>
-        <AppText variant="secondary" style={{ fontSize, fontFamily }}>
-          ay to start
+        <AppText style={{ fontSize, fontFamily, fontWeight: "600" }}>
+          {right}
         </AppText>
       </View>
 
@@ -49,10 +73,13 @@ const styles = StyleSheet.create({
     borderColor: "#333333",
     justifyContent: "center",
   },
-  pressPlayText: {
+
+  wordContainer: {
+    position: "absolute",
     flexDirection: "row",
-    justifyContent: "center",
+    alignItems: "center",
   },
+
   orpMarker: {
     position: "absolute",
     width: 1.5,

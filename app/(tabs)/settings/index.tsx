@@ -1,11 +1,17 @@
-import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  Pressable,
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
-
 import { MONO_FONTS } from "@/constants/fonts";
 import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
 import { FixationPreview } from "@/components/reader/FixationFramePreview";
+import * as Haptics from "expo-haptics";
 
 export default function SettingsScreen() {
   const { width } = useWindowDimensions();
@@ -28,7 +34,9 @@ export default function SettingsScreen() {
 
       {/* Font Size */}
       <View style={styles.section}>
-        <AppText variant="secondary">Font Size: {settings.fontSize}</AppText>
+        <AppText variant="secondary" style={{ fontSize: 20, marginBottom: 10 }}>
+          Font Size: {settings.fontSize}
+        </AppText>
         <Slider
           minimumValue={24}
           maximumValue={56}
@@ -38,45 +46,87 @@ export default function SettingsScreen() {
         />
       </View>
 
-      {/* Font Family */}
+      {/* Font Family Carousel */}
       <View style={styles.section}>
-        <AppText variant="secondary">Font Family</AppText>
+        <AppText variant="secondary" style={{ fontSize: 20, marginBottom: 10 }}>
+          Font Family
+        </AppText>
 
-        {MONO_FONTS.map((font) => (
-          <Pressable
-            key={font}
-            onPress={() => setFontFamily(font)}
-            style={styles.fontRow}
-          >
-            <AppText
-              style={{
-                fontFamily: font,
-                fontSize: 22,
-                color:
-                  font === settings.fontFamily
-                    ? colors.primary
-                    : colors.textPrimary,
-              }}
-            >
-              Fixation
-            </AppText>
-          </Pressable>
-        ))}
+        <ScrollView
+          showsVerticalScrollIndicator={true}
+          showsHorizontalScrollIndicator={true}
+          contentContainerStyle={styles.carousel}
+          snapToInterval={CAROUSEL_ITEM_HEIGHT}
+          decelerationRate="fast"
+        >
+          {MONO_FONTS.map((font) => {
+            const isActive = font === settings.fontFamily;
+
+            return (
+              <Pressable
+                key={font}
+                onPress={() => {
+                  setFontFamily(font);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }}
+                style={[
+                  styles.carouselItem,
+                  isActive && styles.carouselItemActive,
+                ]}
+              >
+                <AppText
+                  style={{
+                    fontFamily: font,
+                    fontSize: 22,
+                    color: isActive ? colors.primary : colors.textPrimary,
+                  }}
+                >
+                  {font}
+                </AppText>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );
 }
+const CAROUSEL_ITEM_WIDTH = 150;
+const CAROUSEL_ITEM_HEIGHT = 56;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
     backgroundColor: colors.background,
     padding: 24,
+    paddingTop: 70,
   },
   section: {
-    marginTop: 24,
+    marginTop: 50,
+    maxHeight: "55%",
   },
   fontRow: {
     paddingVertical: 10,
+  },
+  carousel: {
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    gap: 12,
+  },
+
+  carouselItem: {
+    width: CAROUSEL_ITEM_WIDTH,
+    height: CAROUSEL_ITEM_HEIGHT,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#333",
+  },
+
+  carouselItemActive: {
+    borderColor: colors.primary,
+    backgroundColor: "rgba(0,195,239,0.08)",
   },
 });

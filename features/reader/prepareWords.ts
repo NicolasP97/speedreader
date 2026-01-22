@@ -72,7 +72,7 @@ export function prepareWords(
    - Inconsolata = fontSize * 0.5;
    - Firacode = fontSize * 0.59;
    */
-const MONO_GLYPH_WIDTH_FACTOR: Record<string, number> = {
+export const MONO_GLYPH_WIDTH_FACTOR: Record<string, number> = {
   Atkinson: 0.62,
   Azeret: 0.64,
   B612: 0.64,

@@ -2,15 +2,14 @@ import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useEffect, useMemo, useRef, useState } from "react";
-
 import { WordRenderer } from "@/components/reader/WordRenderer";
 import { TransportControls } from "@/components/reader/TransportControls";
 import { prepareWords } from "@/features/reader/prepareWords";
 import { ONBOARDING_TEXT } from "@/features/onboarding/onboardingText";
 import { useReader } from "@/features/reader/useReader";
 import { useReaderText } from "@/features/text/readerTextContext";
-
 import { useReaderMode } from "@/features/readerMode/ReaderModeContext";
+import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
 import { useWpmController } from "@/features/wpm/useWpmController";
 import { useWpmRampController } from "@/features/onboarding/useWpmRampController";
 import { AppText } from "@/components/ui/AppText";
@@ -50,6 +49,8 @@ export default function OnboardingReaderScreen() {
   // FÜR TESTING ##################
   const [rampEnabled, setRampEnabled] = useState(false);
   // ##########################
+  const { settings } = useReaderSettings();
+  const { fontFamily, fontSize } = settings;
 
   const [rampResetKey, setRampResetKey] = useState(0);
 
@@ -61,8 +62,6 @@ export default function OnboardingReaderScreen() {
   const frameHeight = height * 0.1;
   const frameWidth = width * 0.9;
   const ORP_X = width * 0.35;
-
-  const fontSize = 34;
 
   const { tokens, textId, setRawText, clearText } = useReaderText();
   const { finishOnboarding } = useReaderMode();
@@ -78,11 +77,12 @@ export default function OnboardingReaderScreen() {
   const preparedWords = useMemo(() => {
     if (!tokens.length) return [];
     return prepareWords(tokens, {
-      fontSize,
+      fontSize: fontSize,
       fontWeight: "600",
       orpX: ORP_X,
+      fontFamily: fontFamily,
     });
-  }, [tokens, fontSize, ORP_X]);
+  }, [tokens, fontSize, fontFamily, ORP_X]);
 
   const reader = useReader({
     words: preparedWords,
