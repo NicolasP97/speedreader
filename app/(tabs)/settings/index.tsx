@@ -12,6 +12,7 @@ import { MONO_FONTS } from "@/constants/fonts";
 import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
 import { FixationPreview } from "@/components/reader/FixationFramePreview";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function SettingsScreen() {
   const { width } = useWindowDimensions();
@@ -39,7 +40,7 @@ export default function SettingsScreen() {
         </AppText>
         <Slider
           minimumValue={24}
-          maximumValue={56}
+          maximumValue={48}
           step={2}
           value={settings.fontSize}
           onValueChange={setFontSize}
@@ -52,41 +53,55 @@ export default function SettingsScreen() {
           Font Family
         </AppText>
 
-        <ScrollView
-          showsVerticalScrollIndicator={true}
-          showsHorizontalScrollIndicator={true}
-          contentContainerStyle={styles.carousel}
-          snapToInterval={CAROUSEL_ITEM_HEIGHT}
-          decelerationRate="fast"
-        >
-          {MONO_FONTS.map((font) => {
-            const isActive = font === settings.fontFamily;
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            showsVerticalScrollIndicator
+            contentContainerStyle={{ paddingBottom: 40 }}
+          >
+            {/* Font-Liste */}
 
-            return (
-              <Pressable
-                key={font}
-                onPress={() => {
-                  setFontFamily(font);
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                }}
-                style={[
-                  styles.carouselItem,
-                  isActive && styles.carouselItemActive,
-                ]}
-              >
-                <AppText
-                  style={{
-                    fontFamily: font,
-                    fontSize: 22,
-                    color: isActive ? colors.primary : colors.textPrimary,
+            {MONO_FONTS.map((font) => {
+              const isActive = font === settings.fontFamily;
+
+              return (
+                <Pressable
+                  key={font}
+                  onPress={() => {
+                    setFontFamily(font);
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   }}
+                  style={[
+                    styles.carouselItem,
+                    isActive && styles.carouselItemActive,
+                  ]}
                 >
-                  {font}
-                </AppText>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
+                  <AppText
+                    style={{
+                      fontFamily: font,
+                      fontSize: 22,
+                      color: isActive ? colors.primary : colors.textPrimary,
+                    }}
+                  >
+                    {font}
+                  </AppText>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+
+          {/* Bottom Fade */}
+          <LinearGradient
+            pointerEvents="none"
+            colors={["transparent", colors.background]}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 40,
+            }}
+          />
+        </View>
       </View>
     </View>
   );
@@ -104,7 +119,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: 50,
-    maxHeight: "55%",
+    maxHeight: "50%",
   },
   fontRow: {
     paddingVertical: 10,

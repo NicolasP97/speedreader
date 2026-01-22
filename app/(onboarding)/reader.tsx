@@ -167,7 +167,7 @@ export default function OnboardingReaderScreen() {
           {reader.currentPreparedWord ? (
             <WordRenderer
               preparedWord={reader.currentPreparedWord}
-              fontFamily="Inconsolata"
+              fontFamily={fontFamily ? fontFamily : "Inconsolata"}
               fontSize={fontSize}
               orpX={ORP_X}
               frameWidth={frameWidth}
