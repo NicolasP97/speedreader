@@ -11,6 +11,17 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Inconsolata: require("../assets/fonts/Inconsolata-Regular.ttf"),
     Firacode: require("../assets/fonts/FiraCode-Regular.ttf"),
+    Atkinson: require("../assets/fonts/AtkinsonHyperlegibleMono-Regular.ttf"),
+    Azeret: require("../assets/fonts/AzeretMono-Regular.ttf"),
+    B612: require("../assets/fonts/B612Mono-Regular.ttf"),
+    Cousine: require("../assets/fonts/Cousine-Regular.ttf"),
+    Fragment: require("../assets/fonts/FragmentMono-Regular.ttf"),
+    JetBrains: require("../assets/fonts/JetBrainsMono-Regular.ttf"),
+    Libertinus: require("../assets/fonts/LibertinusMono-Regular.ttf"),
+    Oxygen: require("../assets/fonts/OxygenMono-Regular.ttf"),
+    Reddit: require("../assets/fonts/RedditMono-Regular.ttf"),
+    Ubuntu: require("../assets/fonts/UbuntuMono-Regular.ttf"),
+    Xanh: require("../assets/fonts/XanhMono-Regular.ttf"),
   });
 
   if (!fontsLoaded) {

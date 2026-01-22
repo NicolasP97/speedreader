@@ -7,15 +7,40 @@ import { TransportControls } from "@/components/reader/TransportControls";
 import { ReaderControls } from "@/components/reader/ReaderControls";
 import { useReaderText } from "@/features/text/readerTextContext";
 import { colors } from "../../../constants/colors";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "expo-router";
 
 export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
   const isPortrait = height >= width;
 
-  const [fontSize, setFontSize] = useState(32);
+  const monoFonts = [
+    "Atkinson",
+    "Azeret",
+    "B612",
+    "Cousine",
+    "Firacode",
+    "Fragment",
+    "Inconsolata",
+    "JetBrains",
+    "Libertinus",
+    "Oxygen",
+    "Reddit",
+    "Ubuntu",
+    "Xanh",
+  ];
+
+  const counter = 0;
+
+  useEffect(() => {
+    setFontFamily(monoFonts[counter]);
+  }, [counter]);
+
+  const [fontSize, setFontSize] = useState(48);
   const [wpm, setWpm] = useState(300);
+  const [fontFamily, setFontFamily] = useState("Firacode");
+
+  console.log("fontFamily: ", monoFonts[counter]);
 
   const ORP_X = width * 0.35; // bewusst links vom Zentrum
   const FRAME_WIDTH = width * 0.9;
@@ -30,6 +55,7 @@ export default function ReaderScreen() {
       fontSize: fontSize,
       fontWeight: "600",
       orpX: ORP_X,
+      fontFamily: fontFamily,
     });
   }, [tokens, fontSize, ORP_X]);
 
@@ -82,7 +108,7 @@ export default function ReaderScreen() {
         {index >= 0 && currentPreparedWord ? (
           <WordRenderer
             preparedWord={currentPreparedWord}
-            fontFamily="Inconsolata"
+            fontFamily={fontFamily}
             fontSize={fontSize}
             orpX={ORP_X}
             frameWidth={FRAME_WIDTH}
