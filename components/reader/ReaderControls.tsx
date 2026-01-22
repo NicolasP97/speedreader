@@ -5,17 +5,9 @@ import { colors } from "../../constants/colors";
 interface ReaderControlsProps {
   wpm: number;
   onWpmChange: (wpm: number) => void;
-
-  fontSize: number;
-  onFontSizeChange: (size: number) => void;
 }
 
-export function ReaderControls({
-  wpm,
-  onWpmChange,
-  fontSize,
-  onFontSizeChange,
-}: ReaderControlsProps) {
+export function ReaderControls({ wpm, onWpmChange }: ReaderControlsProps) {
   return (
     <View style={styles.container}>
       {/* WPM */}
@@ -27,18 +19,6 @@ export function ReaderControls({
           step={25}
           value={wpm}
           onValueChange={onWpmChange}
-        />
-      </View>
-
-      {/* Font Size */}
-      <View style={styles.controlBlock}>
-        <Text style={styles.label}>Font Size: {fontSize}</Text>
-        <Slider
-          minimumValue={24}
-          maximumValue={56}
-          step={2}
-          value={fontSize}
-          onValueChange={onFontSizeChange}
         />
       </View>
     </View>

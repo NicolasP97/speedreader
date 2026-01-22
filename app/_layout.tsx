@@ -6,6 +6,7 @@ import { colors } from "../constants/colors";
 import { useFonts } from "expo-font";
 import { ReaderTextProvider } from "@/features/text/readerTextContext";
 import { ReaderModeProvider } from "@/features/readerMode/ReaderModeContext";
+import { ReaderSettingsProvider } from "@/features/settings/ReaderSettingsContext";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -32,13 +33,15 @@ export default function RootLayout() {
     );
   }
   return (
-    <ReaderTextProvider>
-      <ReaderModeProvider>
-        <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <StatusBar style="light" backgroundColor={colors.background} />
-          <Slot />
-        </View>
-      </ReaderModeProvider>
-    </ReaderTextProvider>
+    <ReaderSettingsProvider>
+      <ReaderTextProvider>
+        <ReaderModeProvider>
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <StatusBar style="light" backgroundColor={colors.background} />
+            <Slot />
+          </View>
+        </ReaderModeProvider>
+      </ReaderTextProvider>
+    </ReaderSettingsProvider>
   );
 }
