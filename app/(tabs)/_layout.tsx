@@ -4,9 +4,11 @@ import { useReaderMode } from "@/features/readerMode/ReaderModeContext";
 import OnboardingReaderScreen from "../(onboarding)/reader";
 import { colors } from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useReaderTheme } from "@/features/theme/useReaderTheme";
 
 export default function TabsLayout() {
   const { mode, hasSeenOnboarding } = useReaderMode();
+  const theme = useReaderTheme();
 
   if (hasSeenOnboarding === null) {
     return null; // Splash / Loader
@@ -24,7 +26,7 @@ export default function TabsLayout() {
           backgroundColor: colors.background,
           borderTopColor: "#222",
         },
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#888",
       }}
     >

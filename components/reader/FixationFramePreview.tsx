@@ -2,6 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
 import { prepareWords } from "@/features/reader/prepareWords";
+import { useReaderTheme } from "@/features/theme/useReaderTheme";
 
 interface FixationPreviewProps {
   fontFamily: keyof typeof import("@/features/reader/prepareWords").MONO_GLYPH_WIDTH_FACTOR;
@@ -19,6 +20,7 @@ export function FixationPreview({
   orpX,
 }: FixationPreviewProps) {
   const word = fontFamily;
+  const theme = useReaderTheme();
 
   const [prepared] = prepareWords([word], {
     fontSize,
@@ -50,7 +52,7 @@ export function FixationPreview({
             fontSize,
             fontFamily,
             fontWeight: "600",
-            color: colors.primary,
+            color: theme.orp,
           }}
         >
           {orpChar}

@@ -10,7 +10,9 @@ import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
 import { MONO_FONTS } from "@/constants/fonts";
 import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
+import { useReaderTheme } from "@/features/theme/useReaderTheme";
 import { FixationPreview } from "@/components/reader/FixationFramePreview";
+import { ColorPicker } from "@/components/reader/ColorPicker";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -20,7 +22,10 @@ export default function SettingsScreen() {
   const FRAME_HEIGHT = 80;
   const ORP_X = FRAME_WIDTH * 0.35;
 
-  const { settings, setFontFamily, setFontSize } = useReaderSettings();
+  const { settings, setFontFamily, setFontSize, setAccentColor } =
+    useReaderSettings();
+
+  const theme = useReaderTheme();
 
   return (
     <View style={styles.container}>
@@ -32,6 +37,9 @@ export default function SettingsScreen() {
         height={FRAME_HEIGHT}
         orpX={ORP_X}
       />
+
+      {/* Color Picker */}
+      <ColorPicker value={settings.accentColor} onChange={setAccentColor} />
 
       {/* Font Size */}
       <View style={styles.section}>
@@ -72,14 +80,17 @@ export default function SettingsScreen() {
                   }}
                   style={[
                     styles.carouselItem,
-                    isActive && styles.carouselItemActive,
+                    isActive && [
+                      { borderColor: theme.orp },
+                      styles.carouselItemActive,
+                    ],
                   ]}
                 >
                   <AppText
                     style={{
                       fontFamily: font,
                       fontSize: 22,
-                      color: isActive ? colors.primary : colors.textPrimary,
+                      color: isActive ? theme.orp : colors.textPrimary,
                     }}
                   >
                     {font}
@@ -121,6 +132,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     maxHeight: "50%",
   },
+
   fontRow: {
     paddingVertical: 10,
   },
@@ -141,7 +153,6 @@ const styles = StyleSheet.create({
   },
 
   carouselItemActive: {
-    borderColor: colors.primary,
     backgroundColor: "rgba(0,195,239,0.08)",
   },
 });

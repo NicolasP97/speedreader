@@ -9,6 +9,7 @@ interface ReaderSettingsContextValue {
   settings: ReaderSettings;
   setFontFamily: (font: ReaderSettings["fontFamily"]) => void;
   setFontSize: (size: number) => void;
+  setAccentColor: (color: string) => void;
 }
 
 const ReaderSettingsContext = createContext<ReaderSettingsContextValue | null>(
@@ -58,6 +59,8 @@ export function ReaderSettingsProvider({
 
       setFontSize: (size: ReaderSettings["fontSize"]) =>
         setSettings((s) => ({ ...s, fontSize: size })),
+      setAccentColor: (color: ReaderSettings["accentColor"]) =>
+        setSettings((s) => ({ ...s, accentColor: color })),
     }),
     [settings],
   );
