@@ -7,6 +7,7 @@ import { TransportControls } from "@/components/reader/TransportControls";
 import { ReaderControls } from "@/components/reader/ReaderControls";
 import { useReaderText } from "@/features/text/readerTextContext";
 import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
+import { useReaderTheme } from "@/features/theme/useReaderTheme";
 import { colors } from "../../../constants/colors";
 import { useMemo, useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
@@ -15,6 +16,7 @@ export default function ReaderScreen() {
   const { width, height } = useWindowDimensions();
   const { settings } = useReaderSettings();
   const { fontFamily, fontSize } = settings;
+  const theme = useReaderTheme();
 
   const isPortrait = height >= width;
 
@@ -91,6 +93,7 @@ export default function ReaderScreen() {
             orpX={ORP_X}
             frameWidth={FRAME_WIDTH}
             frameHeight={FRAME_HEIGHT}
+            orpColor={theme.orp}
           />
         ) : (
           <View
@@ -113,7 +116,7 @@ export default function ReaderScreen() {
                 style={{
                   fontSize: 36,
                   fontFamily: "Inconsolata",
-                  color: colors.primary,
+                  color: theme.orp,
                 }}
               >
                 l

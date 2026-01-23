@@ -14,7 +14,7 @@ import { useWpmController } from "@/features/wpm/useWpmController";
 import { useWpmRampController } from "@/features/onboarding/useWpmRampController";
 import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
-
+import { useReaderTheme } from "@/features/theme/useReaderTheme";
 import { useAudioPlayer } from "@/features/audio/useAudioPlayer";
 
 const WPM_RAMP = [
@@ -51,6 +51,7 @@ export default function OnboardingReaderScreen() {
   // ##########################
   const { settings } = useReaderSettings();
   const { fontFamily, fontSize } = settings;
+  const theme = useReaderTheme();
 
   const [rampResetKey, setRampResetKey] = useState(0);
 
@@ -172,6 +173,7 @@ export default function OnboardingReaderScreen() {
               orpX={ORP_X}
               frameWidth={frameWidth}
               frameHeight={frameHeight}
+              orpColor={theme.orp}
             />
           ) : (
             <View
@@ -194,7 +196,7 @@ export default function OnboardingReaderScreen() {
                   style={{
                     fontSize: 36,
                     fontFamily: "Inconsolata",
-                    color: colors.primary,
+                    color: theme.orp,
                   }}
                 >
                   l

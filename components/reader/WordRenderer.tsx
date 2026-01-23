@@ -11,6 +11,7 @@ interface WordRendererProps {
   orpX: number;
   frameWidth: number;
   frameHeight: number;
+  orpColor: string;
 }
 
 const WordRendererComponent = ({
@@ -20,6 +21,7 @@ const WordRendererComponent = ({
   orpX,
   frameWidth,
   frameHeight,
+  orpColor,
 }: WordRendererProps) => {
   const { word, orpIndex, leftOffset } = preparedWord;
 
@@ -44,7 +46,7 @@ const WordRendererComponent = ({
             fontSize: fontSize,
             fontWeight: "600",
             fontFamily,
-            color: colors.primary,
+            color: orpColor,
           }}
         >
           {orpChar}
