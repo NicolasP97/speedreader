@@ -5,6 +5,7 @@ import { AppText } from "@/components/ui/AppText";
 import { colors } from "@/constants/colors";
 import { useReaderText } from "@/features/text/readerTextContext";
 import { tokenizeText } from "@/features/text/tokenize";
+import * as Haptics from "expo-haptics";
 
 export default function ImportScreen() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function ImportScreen() {
     setRawText(trimmed);
     console.log("Text wird in Context gepusht");
     router.push("/reader");
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   }
   function handleClear() {
     setLocalText("");
@@ -35,7 +37,7 @@ export default function ImportScreen() {
       accessible={false}
     >
       <View style={styles.container}>
-        <AppText style={styles.title}>Text Input</AppText>
+        <AppText style={styles.title}>Text Import</AppText>
         <TextInput
           style={styles.input}
           multiline

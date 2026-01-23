@@ -57,7 +57,14 @@ export default function SettingsScreen() {
 
       {/* Font Family Carousel */}
       <View style={styles.section}>
-        <AppText variant="secondary" style={{ fontSize: 20, marginBottom: 10 }}>
+        <AppText
+          variant="secondary"
+          style={{
+            fontSize: 20,
+            marginBottom: 10,
+            textAlign: "center",
+          }}
+        >
           Font Family
         </AppText>
 

@@ -1,4 +1,6 @@
 import { View, StyleSheet, Pressable } from "react-native";
+import { AppText } from "../ui/AppText";
+import * as Haptics from "expo-haptics";
 
 interface ColorPickerProps {
   value: string;
@@ -15,32 +17,48 @@ const ACCENT_COLORS = [
 
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
-    <View style={styles.container}>
-      {ACCENT_COLORS.map((color) => {
-        const isActive = color === value;
+    <View>
+      <AppText
+        variant="secondary"
+        style={{
+          marginTop: 20,
+          fontSize: 20,
+          textAlign: "center",
+        }}
+      >
+        ORP Color
+      </AppText>
 
-        return (
-          <Pressable
-            key={color}
-            onPress={() => onChange(color)}
-            style={[
-              styles.swatch,
-              { backgroundColor: color },
-              isActive && styles.activeSwatch,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={`Select accent color ${color}`}
-            accessibilityState={{ selected: isActive }}
-          />
-        );
-      })}
+      <View style={styles.container}>
+        {ACCENT_COLORS.map((color) => {
+          const isActive = color === value;
+
+          return (
+            <Pressable
+              key={color}
+              onPress={() => {
+                onChange(color);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }}
+              style={[
+                styles.swatch,
+                { backgroundColor: color },
+                isActive && styles.activeSwatch,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel={`Select accent color ${color}`}
+              accessibilityState={{ selected: isActive }}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
+    marginTop: 10,
     flexDirection: "row",
     gap: 12,
   },
