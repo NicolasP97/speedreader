@@ -1,4 +1,11 @@
-import { View, StyleSheet, TextInput, Keyboard, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useMemo, useState } from "react";
 import { useRouter } from "expo-router";
 import { AppText } from "@/components/ui/AppText";
@@ -6,12 +13,16 @@ import { colors } from "@/constants/colors";
 import { useReaderText } from "@/features/text/readerTextContext";
 import { tokenizeText } from "@/features/text/tokenize";
 import * as Haptics from "expo-haptics";
+import * as DocumentPicker from "expo-document-picker";
+import { extractPdfText } from "@/features/import/pdf/extractPdfText";
 
 export default function ImportScreen() {
   const router = useRouter();
   const { setRawText } = useReaderText();
   const [localText, setLocalText] = useState("");
   const trimmed = localText.trim();
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
+
   const stats = useMemo(() => {
     if (!trimmed) {
       return { words: 0, chars: 0 };
@@ -19,7 +30,9 @@ export default function ImportScreen() {
     const tokens = tokenizeText(trimmed);
     return { words: tokens.length, chars: trimmed.length };
   }, [trimmed]);
+
   const canLoad = stats.words > 0;
+
   function handleLoad() {
     if (!canLoad) return;
     setRawText(trimmed);
@@ -30,6 +43,50 @@ export default function ImportScreen() {
   function handleClear() {
     setLocalText("");
   }
+
+  async function handleImportPdf() {
+    if (isPdfLoading) return;
+
+    try {
+      setIsPdfLoading(true);
+
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
+        multiple: false,
+        copyToCacheDirectory: true, // wichtig für zuverlässigen Zugriff :contentReference[oaicite:5]{index=5}
+      });
+
+      if (result.canceled) return;
+
+      const asset = result.assets?.[0];
+      if (!asset?.uri) {
+        console.log("PDF Import", "No file URI returned by the picker.");
+        return;
+      }
+
+      const extracted = await extractPdfText(asset.uri);
+
+      if (!extracted) {
+        console.log(
+          "PDF Import",
+          "No text found in this PDF.\n\nIf it's a scanned PDF, you'll need OCR (Milestone 2).",
+        );
+        return;
+      }
+
+      setRawText(extracted);
+      router.push("/reader");
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    } catch (e: any) {
+      console.log(
+        "PDF Import failed",
+        e?.message ?? "Unknown error while importing PDF.",
+      );
+    } finally {
+      setIsPdfLoading(false);
+    }
+  }
+
   return (
     <Pressable
       style={{ flex: 1 }}
@@ -38,6 +95,28 @@ export default function ImportScreen() {
     >
       <View style={styles.container}>
         <AppText style={styles.title}>Text Import</AppText>
+        {/* PDF Import */}
+        <View style={styles.actions}>
+          <Pressable
+            style={[styles.pdfImportButton, isPdfLoading && { opacity: 0.6 }]}
+            onPress={handleImportPdf}
+            disabled={isPdfLoading}
+          >
+            {isPdfLoading ? (
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+              >
+                <ActivityIndicator />
+                <AppText style={styles.pdfImportButtonText}>
+                  Importing PDF…
+                </AppText>
+              </View>
+            ) : (
+              <AppText style={styles.pdfImportButtonText}>Import PDF</AppText>
+            )}
+          </Pressable>
+        </View>
+        {/* Text input */}
         <TextInput
           style={styles.input}
           multiline
@@ -102,13 +181,28 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   actions: { marginTop: 16, gap: 12 },
+
   primaryButton: {
     backgroundColor: "#00e37d",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
   },
+
   primaryButtonDisabled: { backgroundColor: "#444" },
   primaryButtonText: { fontSize: 16, color: "#000", fontWeight: "600" },
+  pdfImportButton: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  pdfImportButtonText: {
+    fontSize: 16,
+    color: colors.textPrimary,
+    fontWeight: "600",
+  },
+
   clearButton: { alignItems: "center", paddingVertical: 8 },
 });
