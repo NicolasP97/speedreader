@@ -8,12 +8,12 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
 📱 Preview
 <table>
   <tr>
-    <td><img src="./assets/readmeImages/readerDefault.jpg" width="100%"/></td>
-    <td><img src="./assets/readmeImages/readerWord.jpg" width="100%"/></td>
+    <td><img src="./assets/readmeImages/readerDefault.jpg" width="80%"/></td>
+    <td><img src="./assets/readmeImages/readerWord.jpg" width="80%"/></td>
   </tr>
   <tr>
-    <td><img src="./assets/readmeImages/import.jpg" width="100%"/></td>
-    <td><img src="./assets/readmeImages/settings1.jpg" width="100%"/></td>
+    <td><img src="./assets/readmeImages/import.jpg" width="80%"/></td>
+    <td><img src="./assets/readmeImages/settings1.jpg" width="80%"/></td>
   </tr>
 </table>
 
@@ -26,7 +26,7 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
 - One word displayed at a time
 - Fixed visual focus point (ORP — Optimal Recognition Point)
 - Precision-timed playback engine
-- Adjustable WPM (50 – 1000+)
+- Adjustable WPM (50 – 1000)
 
 ### 🎯 ORP Highlighting
 
@@ -66,9 +66,9 @@ Before rendering, text is:
 4.  Abbreviations expanded
 5.  Tokenized into words
 
-Normalization logic: [normalize.ts](features/text/normalize.ts)
-Tokenization: [tokenize.ts](features/text/tokenize.ts)
-Prepared text is managed globally via a [React Context provider](features/text/readerTextContext.tsx)
+- Normalization logic: [normalize.ts](features/text/normalize.ts)
+- Tokenization: [tokenize.ts](features/text/tokenize.ts)
+- Prepared text is managed globally via a [React Context provider](features/text/readerTextContext.tsx)
 
 
 ## 🎮 Reader Controls
