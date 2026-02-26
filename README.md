@@ -11,10 +11,10 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
 <table width="70%">
   <tr>
     <td align="center">
-        <video src="./assets/readmeImages/readerDemo.mp4" width="100%" autoplay loop muted playsinline></video>
+      <img src="./assets/readmeImages/readerDefault.jpg" width="100%" />
     </td>
     <td align="center">
-      <video src="./assets/readmeImages/readerWord.jpg" width="100%" />
+        <video src="./assets/readmeImages/readerDemo.mp4" width="100%" autoplay loop muted playsinline></video>
     </td>
   </tr>
   <tr>
