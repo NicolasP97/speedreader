@@ -147,7 +147,7 @@ components/
 Currently supported:
 
 - [AI created Text]()
-- [PDF import](features/import/pdf/extractPdfText.ts) (OCR Support)
+- [PDF](features/import/pdf/extractPdfText.ts) import ([OCR](app/pdf-ocr.tsx) Support)
 - Copy & paste [text input](app/(tabs)/import/index.tsx)
 
 
