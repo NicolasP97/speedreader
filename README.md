@@ -1,4 +1,4 @@
-🚀 Speed Reader — RSVP Reading App
+# 🚀 Speed Reader — RSVP Reading App
 
 Train your brain to read faster. One word at a time.
 
@@ -7,34 +7,32 @@ A mobile speed-reading app built with Expo + React Native + TypeScript, implemen
 Instead of moving your eyes across lines of text, Speed Reader keeps your gaze fixed while words flow through a single focal point — dramatically reducing subvocalization and increasing reading speed.
 
 📱 Preview
+![Reader Screen](./assets/readme/reader.png)
+![Import Screen](./assets/readme/import.png)
+![Onboarding](./assets/readme/onboarding.png)
 
-✨ Core Features
 
-🧠 RSVP Engine (Rapid Serial Visual Presentation)
+## ✨ Core Features
 
-One word displayed at a time
+### 🧠 RSVP Engine (Rapid Serial Visual Presentation)
+- One word displayed at a time
+- Fixed visual focus point (ORP — Optimal Recognition Point)
+- Precision-timed playback engine
+- Adjustable WPM (50 – 1000+)
 
-Fixed visual focus point (ORP — Optimal Recognition Point)
-
-Precision-timed playback engine
-
-Adjustable WPM (50 – 1000+)
-
-🎯 ORP Highlighting
-
+#### 🎯 ORP Highlighting
 Each word is split into:
 
-left segment
-
-highlighted ORP character
-
-right segment
+- left segment
+- highlighted ORP character
+- right segment
 
 The ORP stays visually centered using precomputed text measurements.
 
 Implementation:
 [prepareWords()](features/reader/prepareWords.ts) → precomputes ORP index + pixel offset
 Rendered by [WordRenderer](components/reader/WordRenderer.tsx)
+
 
 ⚡ Precision Timing Engine
 
@@ -77,35 +75,37 @@ The app includes a progressive onboarding experience that:
 - Synchronizes audio narration
 - Automatically transitions to normal mode
 - Persists onboarding state via [AsyncStorage](features/readerMode/ReaderModeContext.tsx)
-  WPM ramp controller: [useWpmRampController.ts](features/onboarding/useWpmRampController.ts)
+- WPM ramp controller: [useWpmRampController.ts](features/onboarding/useWpmRampController.ts)
+
 
 🏗 Architecture Overview
 
 app/
-(onboarding)
-(tabs)/
-reader/
-import/
-settings/
+   (onboarding)
+   (tabs)/
+      reader/
+      import/
+      settings/
 features/
-import/
-onboarding/
-reader/
-readerMode/
-settings/
-text/
-theme/
-wpm/
+   import/
+   onboarding/
+   reader/
+   readerMode/
+   settings/
+   text/
+   theme/
+   wpm/
 components/
-audio/
-reader/
-ui/
+   audio/
+   reader/
+   ui/
 
 - Expo Router [navigation](<app/(tabs)/_layout.tsx>)
 - Custom Reader Engine class
 - Precomputation of render offsets
 - Minimal re-renders via React.memo
 - Live WPM mutation using refs
+
 
 🛠 Tech Stack
 
@@ -117,6 +117,7 @@ ui/
 - Expo Haptics
 - Custom playback engine (no animation libraries)
 
+
 📥 Text Import
 
 Currently supported:
@@ -124,6 +125,7 @@ Currently supported:
 - Copy & paste [text input](<app/(tabs)/import/index.tsx>)
 - [PDF import](features/import/pdf/extractPdfText.ts)
 - OCR support
+
 
 🎯 Why This Project Is Interesting
 
