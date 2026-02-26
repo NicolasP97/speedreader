@@ -6,16 +6,28 @@ A mobile speed-reading app built with Expo + React Native + TypeScript, implemen
 Instead of moving your eyes across lines of text, Speed Reader keeps your gaze fixed while words flow through a single focal point — dramatically reducing subvocalization and increasing reading speed.
 
 📱 Preview
-<table>
+<div align="center">
+
+<table width="80%">
   <tr>
-    <td><img src="./assets/readmeImages/readerDefault.jpg" width="80%"/></td>
-    <td><img src="./assets/readmeImages/readerWord.jpg" width="80%"/></td>
+    <td align="center">
+      <img src="./assets/readmeImages/readerDefault.jpg" width="100%" />
+    </td>
+    <td align="center">
+      <img src="./assets/readmeImages/readerWord.jpg" width="100%" />
+    </td>
   </tr>
   <tr>
-    <td><img src="./assets/readmeImages/import.jpg" width="80%"/></td>
-    <td><img src="./assets/readmeImages/settings1.jpg" width="80%"/></td>
+    <td align="center">
+      <img src="./assets/readmeImages/import.jpg" width="100%" />
+    </td>
+    <td align="center">
+      <img src="./assets/readmeImages/settings1.jpg" width="100%" />
+    </td>
   </tr>
 </table>
+
+</div>
 
 
 
