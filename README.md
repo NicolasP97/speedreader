@@ -1,50 +1,155 @@
-# Welcome to your Expo app 👋
+🚀 Speed Reader — RSVP Reading App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Train your brain to read faster. One word at a time.
 
-## Get started
+A mobile speed-reading app built with Expo + React Native + TypeScript, implementing RSVP (Rapid Serial Visual Presentation) with ORP-based fixation.
 
-1. Install dependencies
+Instead of moving your eyes across lines of text, Speed Reader keeps your gaze fixed while words flow through a single focal point — dramatically reducing subvocalization and increasing reading speed.
 
-   ```bash
-   npm install
-   ```
+📱 Preview
 
-2. Start the app
+✨ Core Features
 
-   ```bash
-   npx expo start
-   ```
+🧠 RSVP Engine (Rapid Serial Visual Presentation)
 
-In the output, you'll find options to open the app in a
+One word displayed at a time
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Fixed visual focus point (ORP — Optimal Recognition Point)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Precision-timed playback engine
 
-## Get a fresh project
+Adjustable WPM (50 – 1000+)
 
-When you're ready, run:
+🎯 ORP Highlighting
 
-```bash
-npm run reset-project
-```
+Each word is split into:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+left segment
 
-## Learn more
+highlighted ORP character
 
-To learn more about developing your project with Expo, look at the following resources:
+right segment
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The ORP stays visually centered using precomputed text measurements.
 
-## Join the community
+Implementation:
+[prepareWords()](features/reader/prepareWords.ts) → precomputes ORP index + pixel offset
+Rendered by [WordRenderer](components/reader/WordRenderer.tsx)
 
-Join our community of developers creating universal apps.
+⚡ Precision Timing Engine
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Custom playback engine implemented as a class:
+[ReaderEngine](features/reader/ReaderEngine.ts)
+
+Features:
+
+- Deterministic word scheduling
+- Live WPM updates without restarting playback
+- Pause / Reset / Skip
+- Clean state transitions (idle | playing | paused)
+
+📝 Smart Text Processing
+
+Before rendering, text is:
+
+1.  Unicode-normalized
+2.  Cleaned from PDF artifacts
+3.  De-hyphenated
+4.  Abbreviations expanded
+5.  Tokenized into words
+
+Normalization logic: [normalize.ts](features/text/normalize.ts)
+Tokenization: [tokenize.ts](features/text/tokenize.ts)
+Prepared text is managed globally via a [React Context provider](features/text/readerTextContext.tsx)
+
+🎮 Reader Controls
+
+- Play / Pause
+- Skip forward / backward
+- Reset
+- WPM Slider
+
+🎓 Guided Onboarding Mode
+
+The app includes a progressive onboarding experience that:
+
+- Gradually increases WPM
+- Synchronizes audio narration
+- Automatically transitions to normal mode
+- Persists onboarding state via [AsyncStorage](features/readerMode/ReaderModeContext.tsx)
+  WPM ramp controller: [useWpmRampController.ts](features/onboarding/useWpmRampController.ts)
+
+🏗 Architecture Overview
+
+app/
+(onboarding)
+(tabs)/
+reader/
+import/
+settings/
+features/
+import/
+onboarding/
+reader/
+readerMode/
+settings/
+text/
+theme/
+wpm/
+components/
+audio/
+reader/
+ui/
+
+- Expo Router [navigation](<app/(tabs)/_layout.tsx>)
+- Custom Reader Engine class
+- Precomputation of render offsets
+- Minimal re-renders via React.memo
+- Live WPM mutation using refs
+
+🛠 Tech Stack
+
+- Expo (SDK 54)
+- React Native
+- TypeScript
+- Expo Router
+- AsyncStorage
+- Expo Haptics
+- Custom playback engine (no animation libraries)
+
+📥 Text Import
+
+Currently supported:
+
+- Copy & paste [text input](<app/(tabs)/import/index.tsx>)
+- [PDF import](features/import/pdf/extractPdfText.ts)
+- OCR support
+
+🎯 Why This Project Is Interesting
+
+This is not just a UI app.
+
+It demonstrates:
+
+- Custom timing engine design
+- Performance-conscious rendering
+- Precomputation strategies
+- Context-driven state management
+- Live parameter mutation without re-instantiating logic
+- UX design optimized for cognitive flow
+
+🚀 Getting Started
+
+git clone https://github.com/NicolasP97/speedreader.git
+cd speedreader
+npm install
+npx expo start
+
+Make sure you are using Expo SDK 54.
+
+🧪 Future Improvements
+
+- Session statistics
+- Reading streak tracking
+- Eye fixation calibration mode
+- Native typography measurement instead of monospace estimation
