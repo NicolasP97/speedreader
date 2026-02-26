@@ -14,7 +14,7 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
       <img src="./assets/readmeImages/readerDefault.jpg" width="100%" />
     </td>
     <td align="center">
-        <video src="./assets/readmeImages/readerDemo.gif" width="100%" autoplay loop muted playsinline></video>
+          <img src="./assets/readmeImages/readerDemo.gif" width="100%" />
     </td>
   </tr>
   <tr>

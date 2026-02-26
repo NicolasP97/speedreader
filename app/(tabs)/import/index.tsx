@@ -5,6 +5,7 @@ import {
   Keyboard,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useMemo, useState } from "react";
 import { useRouter } from "expo-router";
@@ -60,16 +61,27 @@ export default function ImportScreen() {
 
       const asset = result.assets?.[0];
       if (!asset?.uri) {
-        console.log("PDF Import", "No file URI returned by the picker.");
+        Alert.alert("PDF Import", "No file URI returned by the picker.");
         return;
       }
 
       const extracted = await extractPdfText(asset.uri);
 
       if (!extracted) {
-        console.log(
+        Alert.alert(
           "PDF Import",
-          "No text found in this PDF.\n\nIf it's a scanned PDF, you'll need OCR (Milestone 2).",
+          "No selectable text found. This looks like a scanned PDF.\n\nStart OCR?",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Start OCR",
+              onPress: () =>
+                router.push({
+                  pathname: "/pdf-ocr",
+                  params: { uri: asset.uri },
+                }),
+            },
+          ],
         );
         return;
       }
