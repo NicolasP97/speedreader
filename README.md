@@ -1,5 +1,4 @@
 # 🚀 Speed Reader — RSVP Reading App
-
 Train your brain to read faster. One word at a time.
 
 A mobile speed-reading app built with Expo + React Native + TypeScript, implementing RSVP (Rapid Serial Visual Presentation) with ORP-based fixation.
@@ -7,20 +6,24 @@ A mobile speed-reading app built with Expo + React Native + TypeScript, implemen
 Instead of moving your eyes across lines of text, Speed Reader keeps your gaze fixed while words flow through a single focal point — dramatically reducing subvocalization and increasing reading speed.
 
 📱 Preview
-![Reader Screen](./assets/readme/reader.png)
-![Import Screen](./assets/readme/import.png)
-![Onboarding](./assets/readme/onboarding.png)
+![Reader Screen Default](./assets/readmeImages/readerDefault.jpg)
+![Reader Screen Playing](./assets/readmeImages/readerWord.jpg)
+![Text Import](./assets/readmeImages/import.jpg)
+![Settings Red ORP](./assets/readmeImages/settings1.jpg)
+
 
 
 ## ✨ Core Features
 
 ### 🧠 RSVP Engine (Rapid Serial Visual Presentation)
+
 - One word displayed at a time
 - Fixed visual focus point (ORP — Optimal Recognition Point)
 - Precision-timed playback engine
 - Adjustable WPM (50 – 1000+)
 
 ### 🎯 ORP Highlighting
+
 Each word is split into:
 
 - left segment
@@ -29,9 +32,9 @@ Each word is split into:
 
 The ORP stays visually centered using precomputed text measurements.
 
-Implementation:
-[prepareWords()](features/reader/prepareWords.ts) → precomputes ORP index + pixel offset
-Rendered by [WordRenderer](components/reader/WordRenderer.tsx)
+Implementation: 
+- [prepareWords()](features/reader/prepareWords.ts) → precomputes ORP index + pixel offset
+- Rendered by [WordRenderer](components/reader/WordRenderer.tsx)
 
 
 ## ⚡ Precision Timing Engine
@@ -86,8 +89,8 @@ The app includes a progressive onboarding experience that:
 app/
    (onboarding)
    (tabs)/
-      reader/
       import/
+      reader/
       settings/
 features/
    import/
@@ -125,9 +128,9 @@ components/
 
 Currently supported:
 
-- Copy & paste [text input](<app/(tabs)/import/index.tsx>)
-- [PDF import](features/import/pdf/extractPdfText.ts)
-- OCR support
+- [AI created Text]
+- [PDF import (OCR Support)](features/import/pdf/extractPdfText.ts)
+- Copy & paste [text input](app/(tabs)/import/index.tsx)
 
 
 ## 🎯 Why This Project Is Interesting
@@ -143,12 +146,13 @@ It demonstrates:
 - Live parameter mutation without re-instantiating logic
 - UX design optimized for cognitive flow
 
+
 ## 🚀 Getting Started
 
-git clone https://github.com/NicolasP97/speedreader.git
-cd speedreader
-npm install
-npx expo start
+- git clone https://github.com/NicolasP97/speedreader.git
+- cd speedreader
+- npm install
+- npx expo start
 
 Make sure you are using Expo SDK 54.
 
