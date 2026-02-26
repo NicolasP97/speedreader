@@ -6,10 +6,16 @@ A mobile speed-reading app built with Expo + React Native + TypeScript, implemen
 Instead of moving your eyes across lines of text, Speed Reader keeps your gaze fixed while words flow through a single focal point — dramatically reducing subvocalization and increasing reading speed.
 
 📱 Preview
-![Reader Screen Default](./assets/readmeImages/readerDefault.jpg)
-![Reader Screen Playing](./assets/readmeImages/readerWord.jpg)
-![Text Import](./assets/readmeImages/import.jpg)
-![Settings Red ORP](./assets/readmeImages/settings1.jpg)
+<table>
+  <tr>
+    <td><img src="./assets/readmeImages/readerDefault.jpg" width="100%"/></td>
+    <td><img src="./assets/readmeImages/readerWord.jpg" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/readmeImages/import.jpg" width="100%"/></td>
+    <td><img src="./assets/readmeImages/settings1.jpg" width="100%"/></td>
+  </tr>
+</table>
 
 
 
@@ -128,8 +134,8 @@ components/
 
 Currently supported:
 
-- [AI created Text]
-- [PDF import (OCR Support)](features/import/pdf/extractPdfText.ts)
+- [AI created Text]()
+- [PDF import](features/import/pdf/extractPdfText.ts) (OCR Support)
 - Copy & paste [text input](app/(tabs)/import/index.tsx)
 
 
