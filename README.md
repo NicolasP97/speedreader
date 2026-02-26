@@ -20,7 +20,7 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
 - Precision-timed playback engine
 - Adjustable WPM (50 – 1000+)
 
-#### 🎯 ORP Highlighting
+### 🎯 ORP Highlighting
 Each word is split into:
 
 - left segment
@@ -34,7 +34,7 @@ Implementation:
 Rendered by [WordRenderer](components/reader/WordRenderer.tsx)
 
 
-⚡ Precision Timing Engine
+## ⚡ Precision Timing Engine
 
 Custom playback engine implemented as a class:
 [ReaderEngine](features/reader/ReaderEngine.ts)
@@ -46,7 +46,8 @@ Features:
 - Pause / Reset / Skip
 - Clean state transitions (idle | playing | paused)
 
-📝 Smart Text Processing
+
+### 📝 Smart Text Processing
 
 Before rendering, text is:
 
@@ -60,14 +61,16 @@ Normalization logic: [normalize.ts](features/text/normalize.ts)
 Tokenization: [tokenize.ts](features/text/tokenize.ts)
 Prepared text is managed globally via a [React Context provider](features/text/readerTextContext.tsx)
 
-🎮 Reader Controls
+
+## 🎮 Reader Controls
 
 - Play / Pause
 - Skip forward / backward
 - Reset
 - WPM Slider
 
-🎓 Guided Onboarding Mode
+
+## 🎓 Guided Onboarding Mode
 
 The app includes a progressive onboarding experience that:
 
@@ -78,8 +81,8 @@ The app includes a progressive onboarding experience that:
 - WPM ramp controller: [useWpmRampController.ts](features/onboarding/useWpmRampController.ts)
 
 
-🏗 Architecture Overview
-
+## 🏗 Architecture Overview
+```
 app/
    (onboarding)
    (tabs)/
@@ -99,7 +102,7 @@ components/
    audio/
    reader/
    ui/
-
+```
 - Expo Router [navigation](<app/(tabs)/_layout.tsx>)
 - Custom Reader Engine class
 - Precomputation of render offsets
@@ -107,7 +110,7 @@ components/
 - Live WPM mutation using refs
 
 
-🛠 Tech Stack
+## 🛠 Tech Stack
 
 - Expo (SDK 54)
 - React Native
@@ -118,7 +121,7 @@ components/
 - Custom playback engine (no animation libraries)
 
 
-📥 Text Import
+## 📥 Text Import
 
 Currently supported:
 
@@ -127,7 +130,7 @@ Currently supported:
 - OCR support
 
 
-🎯 Why This Project Is Interesting
+## 🎯 Why This Project Is Interesting
 
 This is not just a UI app.
 
@@ -140,7 +143,7 @@ It demonstrates:
 - Live parameter mutation without re-instantiating logic
 - UX design optimized for cognitive flow
 
-🚀 Getting Started
+## 🚀 Getting Started
 
 git clone https://github.com/NicolasP97/speedreader.git
 cd speedreader
@@ -149,7 +152,8 @@ npx expo start
 
 Make sure you are using Expo SDK 54.
 
-🧪 Future Improvements
+
+## 🧪 Future Improvements
 
 - Session statistics
 - Reading streak tracking
