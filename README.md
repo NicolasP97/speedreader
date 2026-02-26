@@ -8,7 +8,7 @@ Instead of moving your eyes across lines of text, Speed Reader keeps your gaze f
 📱 Preview
 <div align="center">
 
-<table width="80%">
+<table width="70%">
   <tr>
     <td align="center">
       <img src="./assets/readmeImages/readerDefault.jpg" width="100%" />
