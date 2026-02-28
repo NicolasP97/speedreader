@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { buildSystemPrompt, buildUserPrompt } from "../llm/prompt";
 
 export const generateRouter = Router();
 
@@ -19,12 +20,15 @@ generateRouter.post("/generate-rsvp-text", (req, res) => {
     });
   }
 
-  const { topic, language, targetWords, difficulty } = parsed.data;
+  const input = parsed.data;
 
-  const text =
-    language === "de"
-      ? `Thema: ${topic}. Modus: ${difficulty}. Ziel: ${targetWords} Wörter. Dies ist ein Platzhaltertext.`
-      : `Topic: ${topic}. Mode: ${difficulty}. Target: ${targetWords} words. This is placeholder text.`;
+  // Prompt bauen (noch kein LLM Call)
+  const systemPrompt = buildSystemPrompt();
+  const userPrompt = buildUserPrompt(input);
 
-  res.json({ text });
+  // TEMP: Debug-Response, damit wir den Prompt prüfen können.
+  return res.json({
+    systemPrompt,
+    userPrompt,
+  });
 });
