@@ -31,6 +31,8 @@ export async function generateText({
     temperature: 0.4,
   });
 
+  console.log("response.usage: ", response.usage);
+
   if (!response.output_text) {
     throw new Error("No output_text returned from OpenAI.");
   }

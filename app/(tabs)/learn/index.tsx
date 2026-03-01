@@ -24,8 +24,8 @@ const bla = 0;
 
 const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
-console.log("API_BASE_URL:: ", API_BASE_URL);
-console.log("ENV:", process.env.EXPO_PUBLIC_API_BASE_URL);
+// console.log("API_BASE_URL:: ", API_BASE_URL);
+// console.log("ENV:", process.env.EXPO_PUBLIC_API_BASE_URL);
 
 export default function LearnScreen() {
   const router = useRouter();
@@ -63,6 +63,14 @@ export default function LearnScreen() {
           language: DEFAULT_LANGUAGE,
         }),
       });
+
+      if (res.status === 429) {
+        Alert.alert(
+          "Limit reached",
+          "You reached the generation limit. Please try again later.",
+        );
+        return;
+      }
 
       if (!res.ok) {
         // Backend sendet bei invalid input 400 + details :contentReference[oaicite:4]{index=4}

@@ -64,8 +64,8 @@ Difficulty: "${difficulty}"
 Write a continuous learning text that teaches the essentials about the topic.
 
 STRUCTURE:
-- 4 to 6 paragraphs.
-- Each paragraph has 3 to 5 sentences.
+- Multiple paragraphs depending on target length.
+- Each paragraph can have up to 7 sentences.
 - Paragraph 1 explains what it is and why it matters.
 - Middle paragraphs explain key mechanisms, components, and examples.
 - Final paragraph explains common misconceptions or practical implications.
