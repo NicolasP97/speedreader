@@ -31,6 +31,19 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
+        name="learn/index"
+        options={{
+          title: "Learn",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "telescope" : "telescope-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: "Home",
