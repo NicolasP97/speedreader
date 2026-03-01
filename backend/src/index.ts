@@ -14,8 +14,8 @@ app.use(cors({ origin: true }));
 
 app.use(
   rateLimit({
-    windowMs: 60_000,
-    max: 20,
+    windowMs: 60 * 60 * 1000, // 1 Stunde
+    max: 15,
     standardHeaders: true,
     legacyHeaders: false,
   }),

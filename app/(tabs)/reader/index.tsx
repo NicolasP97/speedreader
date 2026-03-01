@@ -9,7 +9,7 @@ import { useReaderText } from "@/features/text/readerTextContext";
 import { useReaderSettings } from "@/features/settings/ReaderSettingsContext";
 import { useReaderTheme } from "@/features/theme/useReaderTheme";
 import { colors } from "../../../constants/colors";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "expo-router";
 
 export default function ReaderScreen() {
@@ -66,12 +66,11 @@ export default function ReaderScreen() {
     }, [pause]),
   );
 
-  // console.log(
-  //   "reader index",
-  //   index,
-  //   "reader currentPreparedWord",
-  //   currentPreparedWord,
-  // );
+  // Reader immer resetten wenn sich textID ändert für besseres UX
+  useEffect(() => {
+    pause();
+    reset();
+  }, [textId]);
 
   return (
     <View style={styles.container}>
