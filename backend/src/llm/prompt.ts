@@ -9,17 +9,6 @@ export type GenerateRsvpPromptInput = {
   difficulty: Difficulty;
 };
 
-// Random Conclusion gegen einheitlich wirkende Abschlüsse
-const conclusionStyles = [
-  "clarify a misconception",
-  "summarize key implications",
-  "connect the topic to real-world relevance",
-  "explain an important limitation",
-];
-
-const selectedStyle =
-  conclusionStyles[Math.floor(Math.random() * conclusionStyles.length)];
-
 /**
  * System Prompt:
  * - Statische Regeln, die IMMER gelten.
@@ -87,6 +76,23 @@ export function buildUserPrompt(input: GenerateRsvpPromptInput): string {
     wordMin = 9;
     wordMax = 17;
   }
+
+  // Random Conclusion gegen einheitlich wirkende Abschlüsse
+  const conclusionStyles = [
+    "clarify a misconception",
+    "summarize key implications",
+    "connect the topic to real-world relevance",
+    "explain an important limitation",
+  ];
+
+  const selectedStyle =
+    conclusionStyles[Math.floor(Math.random() * conclusionStyles.length)];
+
+  console.log("topic: ", topic);
+  console.log("difficulty: ", difficulty);
+  console.log("sentenceMin: ", sentenceMin);
+  console.log("sentenceMax: ", sentenceMax);
+  console.log("selectedStyle: ", selectedStyle);
 
   return `
 Topic: "${sanitizeTopic(topic)}"

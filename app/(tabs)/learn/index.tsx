@@ -18,7 +18,7 @@ import { useReaderText } from "@/features/text/readerTextContext";
 
 type Difficulty = "easy" | "normal" | "advanced";
 
-const TARGET_WORDS = 450;
+const TARGET_WORDS = 500;
 const DEFAULT_LANGUAGE: "de" | "en" = "de";
 
 const API_BASE_URL =
