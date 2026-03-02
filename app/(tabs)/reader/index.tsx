@@ -22,7 +22,7 @@ export default function ReaderScreen() {
 
   const [wpm, setWpm] = useState(300);
 
-  const ORP_X = width * 0.35; // bewusst links vom Zentrum
+  const ORP_X = width * 0.3; // bewusst links vom Zentrum
   const FRAME_WIDTH = width * 0.9;
   const FRAME_HEIGHT = height * 0.1;
 
@@ -37,7 +37,7 @@ export default function ReaderScreen() {
       orpX: ORP_X,
       fontFamily: fontFamily,
     });
-  }, [tokens, fontSize, ORP_X]);
+  }, [tokens, fontSize, fontFamily, ORP_X]);
 
   const {
     currentPreparedWord,
@@ -72,6 +72,20 @@ export default function ReaderScreen() {
     reset();
   }, [textId]);
 
+  // ORP-Positioning vom Idle Text berechnen
+  const sentence = "Press Play to start";
+  const orpIndex = sentence.indexOf("l");
+
+  const leftPart = sentence.slice(0, orpIndex);
+  const orpChar = sentence[orpIndex];
+  const rightPart = sentence.slice(orpIndex + 1);
+
+  const glyphWidth = 32 * 0.5;
+  const leftWidth = leftPart.length * glyphWidth;
+  const orpWidth = glyphWidth;
+
+  const leftOffset = ORP_X - (leftWidth + orpWidth / 2);
+
   return (
     <View style={styles.container}>
       {/* Word Renderer */}
@@ -103,28 +117,29 @@ export default function ReaderScreen() {
           >
             {/* ORP Marker oben */}
             <View style={[styles.orpMarker, { left: ORP_X, top: 0 }]} />
-            <View style={styles.pressPlayText}>
-              <AppText
-                variant="secondary"
-                style={{ fontSize: 36, fontFamily: "Inconsolata" }}
-              >
-                Press P
+            <View
+              style={{
+                position: "absolute",
+                flexDirection: "row",
+                left: leftOffset,
+              }}
+            >
+              <AppText style={{ fontSize: 32, fontFamily: "Inconsolata" }}>
+                {leftPart}
               </AppText>
+
               <AppText
-                variant="secondary"
                 style={{
-                  fontSize: 36,
+                  fontSize: 32,
                   fontFamily: "Inconsolata",
                   color: theme.orp,
                 }}
               >
-                l
+                {orpChar}
               </AppText>
-              <AppText
-                variant="secondary"
-                style={{ fontSize: 36, fontFamily: "Inconsolata" }}
-              >
-                ay to start
+
+              <AppText style={{ fontSize: 32, fontFamily: "Inconsolata" }}>
+                {rightPart}
               </AppText>
             </View>
             {/* ORP Marker unten */}
@@ -172,7 +187,6 @@ const styles = StyleSheet.create({
   },
   pressPlayText: {
     flexDirection: "row",
-    justifyContent: "center",
   },
 
   orpMarker: {

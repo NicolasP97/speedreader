@@ -18,9 +18,8 @@ import { useReaderText } from "@/features/text/readerTextContext";
 
 type Difficulty = "easy" | "normal" | "advanced";
 
-const TARGET_WORDS = 400;
+const TARGET_WORDS = 450;
 const DEFAULT_LANGUAGE: "de" | "en" = "de";
-const bla = 0;
 
 const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:3001";

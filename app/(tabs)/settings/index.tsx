@@ -20,7 +20,7 @@ export default function SettingsScreen() {
   const { width } = useWindowDimensions();
   const FRAME_WIDTH = width * 0.9;
   const FRAME_HEIGHT = 80;
-  const ORP_X = FRAME_WIDTH * 0.35;
+  const ORP_X = FRAME_WIDTH * 0.3;
 
   const { settings, setFontFamily, setFontSize, setAccentColor } =
     useReaderSettings();
@@ -74,7 +74,6 @@ export default function SettingsScreen() {
             contentContainerStyle={{ paddingBottom: 40 }}
           >
             {/* Font-Liste */}
-
             {MONO_FONTS.map((font) => {
               const isActive = font === settings.fontFamily;
 

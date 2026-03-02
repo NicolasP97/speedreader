@@ -28,18 +28,48 @@ generateRouter.post("/generate-rsvp-text", async (req, res) => {
   const systemPrompt = buildSystemPrompt();
   const userPrompt = buildUserPrompt(input);
 
-  try {
-    const text = await generateText({
-      system: systemPrompt,
-      user: userPrompt,
-    });
+  let lastError: any;
 
-    return res.json({ text });
-  } catch (error: any) {
-    console.error("LLM generation failed:", error?.message);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      let text = await generateText({
+        system: systemPrompt,
+        user: userPrompt,
+      });
 
-    return res.status(500).json({
-      error: "Text generation failed",
-    });
+      const words = text.split(/\s+/).length;
+      const minWords = Math.floor(input.targetWords * 0.9);
+
+      if (words < minWords) {
+        const expansionPrompt = `
+The following text is too short.
+
+Current length: ${words} words.
+Required minimum length: ${minWords} words.
+
+Expand the text with additional relevant factual detail.
+Do not repeat sentences.
+Keep all original formatting rules.
+Return the full improved text.
+
+TEXT:
+${text}
+      `.trim();
+
+        text = await generateText({
+          system: systemPrompt,
+          user: expansionPrompt,
+        });
+      }
+
+      return res.json({ text });
+    } catch (error: any) {
+      lastError = error;
+    }
   }
+
+  console.error("LLM generation failed:", lastError?.message);
+  return res.status(500).json({
+    error: "Text generation failed",
+  });
 });
